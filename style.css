@@ -1,0 +1,15 @@
+body {
+  padding: 5%;
+}
+
+label {
+  padding-bottom: 5px;
+}
+
+.form-group {
+  padding-bottom: 20px;
+}
+
+html.is-rtl * {
+  direction: rtl;
+}
