@@ -3,12 +3,15 @@ const app = electron.app;
 const BrowserWindow = electron.BrowserWindow;
 const Menu = electron.Menu;
 const ipc = electron.ipcMain;
+const dbManager = require("./dbHandler").dbHandler;
 
 const ENGLISH = "en";
 const HEBREW = "he";
+const dbHandler = new dbManager();
 
 let win;
 let languageDictionary;
+let database;
 
 function createWindow() {
   win = new BrowserWindow({
@@ -25,17 +28,24 @@ function createWindow() {
 }
 
 function initLanguage() {
-  loadLanguage(app.getLocale());
+  loadLanguage(database.preferredLang || app.getLocale());
 }
 
 function loadLanguage(lang) {
   if (lang.includes(HEBREW)) {
     languageDictionary = require("./lang/he.json");
+    saveLanguage(HEBREW);
     createMenu();
   } else {
     languageDictionary = require("./lang/en.json");
+    saveLanguage(ENGLISH);
     createMenu();
   }
+}
+
+function saveLanguage(lang) {
+  database.preferredLang = lang;
+  dbHandler.updateDb(database);
 }
 
 function createMenu() {
@@ -71,7 +81,12 @@ function createMenu() {
   Menu.setApplicationMenu(appMenu);
 }
 
+function initDatabase() {
+  database = dbHandler.dbContent;
+}
+
 app.on("ready", () => {
+  initDatabase();
   initLanguage();
   createWindow();
   createMenu();
