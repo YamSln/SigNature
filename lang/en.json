@@ -3,12 +3,18 @@
     "name": "Name",
     "email": "Email",
     "position": "Position",
-    "mobile": "mobile",
+    "mobile": "Mobile",
     "office": "Office",
     "fax": "Fax",
     "file": "File",
+    "settings": "Settings",
+    "clear": "Clear",
+    "save": "Save",
     "exit": "Exit",
     "language": "Language",
     "english": "English",
-    "hebrew": "Hebrew"
+    "hebrew": "Hebrew",
+    "missingField": "Please fill out this field",
+    "invalidEmail": "Invalid email address",
+    "saveFile": "Save signature"
 }

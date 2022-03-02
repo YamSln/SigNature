@@ -1,13 +1,9 @@
-const electron = require("electron");
-const app = electron.app;
-const BrowserWindow = electron.BrowserWindow;
-const Menu = electron.Menu;
-const ipc = electron.ipcMain;
-const dbManager = require("./dbHandler").dbHandler;
+const { app, BrowserWindow, Menu, ipcMain, dialog } = require("electron");
+const { dbHandler } = require("./dbHandler");
+const { ENGLISH, HEBREW } = require("./db.model");
+const fs = require("fs");
 
-const ENGLISH = "en";
-const HEBREW = "he";
-const dbHandler = new dbManager();
+const db = new dbHandler();
 
 let win;
 let languageDictionary;
@@ -18,6 +14,7 @@ function createWindow() {
     webPreferences: {
       nodeIntegration: true,
       contextIsolation: false,
+      defaultFontFamily: "Assistant",
     },
   });
   win.loadFile("index.html");
@@ -45,7 +42,7 @@ function loadLanguage(lang) {
 
 function saveLanguage(lang) {
   database.preferredLang = lang;
-  dbHandler.updateDb(database);
+  db.updateDb(database);
 }
 
 function createMenu() {
@@ -55,6 +52,7 @@ function createMenu() {
       submenu: [
         {
           label: languageDictionary.exit,
+          click: () => app.quit(),
         },
       ],
     },
@@ -82,7 +80,7 @@ function createMenu() {
 }
 
 function initDatabase() {
-  database = dbHandler.dbContent;
+  database = db.dbContent;
 }
 
 app.on("ready", () => {
@@ -112,3 +110,27 @@ app.on("activate", () => {
 });
 
 // ---- IPC Handling ----
+
+ipcMain.on("form-submit", (evt, message) => {
+  dialog
+    .showSaveDialog({
+      title: languageDictionary.saveFile,
+      filters: [
+        {
+          name: "HTML Files",
+          extensions: ["html"],
+        },
+      ],
+    })
+    .then((file) => {
+      console.log(file.filePath.toString());
+      if (!file.canceled) {
+        fs.writeFile(file.filePath.toString(), "File", (err) => {
+          console.log(err);
+        });
+      }
+    })
+    .catch((err) => {
+      console.log(err);
+    });
+});

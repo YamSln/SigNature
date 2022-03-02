@@ -1,9 +1,10 @@
-const InvalidLanguageError = require("./errors/errors").InvalidLanguageError;
-
-const InvalidURLError = require("./errors/errors").InvalidURLError;
+const { InvalidLanguageError, InvalidURLError } = require("./errors/errors");
 
 const ENGLISH = "en";
 const HEBREW = "he";
+
+exports.ENGLISH = ENGLISH;
+exports.HEBREW = HEBREW;
 
 exports.dbStructure = class dbStructure {
   constructor(

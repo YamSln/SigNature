@@ -7,8 +7,14 @@
     "office": "משרד",
     "fax": "פקס",
     "file": "קובץ",
+    "settings": "הגדרות",
+    "clear": "נקה",
+    "save": "שמור",
     "exit": "יציאה",
     "language": "שפה",
     "english": "אנגלית",
-    "hebrew": "עברית"
+    "hebrew": "עברית",
+    "missingField": "שדה זה הינו חובה",
+    "invalidEmail": "כתובת אימייל לא תקינה",
+    "saveFile": "שמירה בשם"
 }
