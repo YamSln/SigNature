@@ -5,6 +5,10 @@
     "position": "Position",
     "mobile": "Mobile",
     "office": "Office",
+    "linkedin": "Linkedin",
+    "facebook": "Facebook",
+    "youtube": "Youtube",
+    "instagram": "Instagram",
     "fax": "Fax",
     "file": "File",
     "settings": "Settings",
@@ -16,5 +20,7 @@
     "hebrew": "Hebrew",
     "missingField": "Please fill out this field",
     "invalidEmail": "Invalid email address",
-    "saveFile": "Save signature"
+    "invalidNumber": "Invalid phone number",
+    "saveFile": "Save signature",
+    "backIcon": "../assets/icons/arrow-90deg-left.svg"
 }

@@ -1,14 +1,17 @@
+// ---- Main Process ----
 const { app, BrowserWindow, Menu, ipcMain, dialog } = require("electron");
-const { dbHandler } = require("./dbHandler");
-const { ENGLISH, HEBREW } = require("./db.model");
+const { dbHandler } = require("./src/dbHandler");
+const { ENGLISH, HEBREW } = require("./src/db.model");
+const path = require("path");
 const fs = require("fs");
 
 const db = new dbHandler();
+const isMac = isPlatformMac();
 
-let win;
-let languageDictionary;
-let database;
-
+let win; // Main window
+let languageDictionary; // Dictionary
+let database; // Database object
+// Main window
 function createWindow() {
   win = new BrowserWindow({
     webPreferences: {
@@ -23,11 +26,11 @@ function createWindow() {
     win = null;
   });
 }
-
+// Init language according to preferred language or system language
 function initLanguage() {
   loadLanguage(database.preferredLang || app.getLocale());
 }
-
+// Loads language, saves to db and renders application menu
 function loadLanguage(lang) {
   if (lang.includes(HEBREW)) {
     languageDictionary = require("./lang/he.json");
@@ -39,20 +42,27 @@ function loadLanguage(lang) {
     createMenu();
   }
 }
-
+// Saves and updates language
 function saveLanguage(lang) {
   database.preferredLang = lang;
   db.updateDb(database);
 }
-
+// Application Menu
 function createMenu() {
   const appMenu = Menu.buildFromTemplate([
     {
       label: languageDictionary.file,
       submenu: [
         {
+          label: languageDictionary.settings,
+          click: navigateToSettings,
+        },
+        {
+          type: "separator",
+        },
+        {
           label: languageDictionary.exit,
-          click: () => app.quit(),
+          role: isMac ? "close" : "quit",
         },
       ],
     },
@@ -62,15 +72,19 @@ function createMenu() {
         {
           label: languageDictionary.english,
           click: () => {
-            loadLanguage(ENGLISH);
-            sendLanguageChange();
+            if (languageDictionary.lang !== ENGLISH) {
+              loadLanguage(ENGLISH);
+              sendLanguageChange();
+            }
           },
         },
         {
           label: languageDictionary.hebrew,
           click: () => {
-            loadLanguage(HEBREW);
-            sendLanguageChange();
+            if (languageDictionary.lang !== HEBREW) {
+              loadLanguage(HEBREW);
+              sendLanguageChange();
+            }
           },
         },
       ],
@@ -78,11 +92,11 @@ function createMenu() {
   ]);
   Menu.setApplicationMenu(appMenu);
 }
-
+// Get database object
 function initDatabase() {
   database = db.dbContent;
 }
-
+// Start initializations and rendering
 app.on("ready", () => {
   initDatabase();
   initLanguage();
@@ -91,14 +105,14 @@ app.on("ready", () => {
   win.webContents.on("dom-ready", sendLanguageChange);
 });
 
-function sendLanguageChange() {
-  win.webContents.send("languageChange", languageDictionary);
-}
-
 // ---- MAC Support ----
 
+function isPlatformMac() {
+  return process.platform == "darwin";
+}
+
 app.on("window-all-closed", () => {
-  if (process.platform !== "darwin") {
+  if (!isMac) {
     app.quit();
   }
 });
@@ -111,12 +125,18 @@ app.on("activate", () => {
 
 // ---- IPC Handling ----
 
-ipcMain.on("form-submit", (evt, message) => {
-  dialog
+function sendLanguageChange() {
+  // Language change event
+  win.webContents.send("languageChange", languageDictionary);
+}
+// Form submission event listener
+ipcMain.on("form-submit", (evt, payload) => {
+  dialog // Open save dialog
     .showSaveDialog({
       title: languageDictionary.saveFile,
       filters: [
         {
+          // Allow only HTML files to be saved
           name: "HTML Files",
           extensions: ["html"],
         },
@@ -125,7 +145,8 @@ ipcMain.on("form-submit", (evt, message) => {
     .then((file) => {
       console.log(file.filePath.toString());
       if (!file.canceled) {
-        fs.writeFile(file.filePath.toString(), "File", (err) => {
+        // Handle file saving
+        fs.writeFile(file.filePath.toString(), "Signature", (err) => {
           console.log(err);
         });
       }
@@ -134,3 +155,13 @@ ipcMain.on("form-submit", (evt, message) => {
       console.log(err);
     });
 });
+
+ipcMain.on("navigate-to-main", () => {
+  win.loadFile("index.html");
+});
+
+// ---- Navigation ----
+
+function navigateToSettings() {
+  win.loadFile("./src/settings.html");
+}

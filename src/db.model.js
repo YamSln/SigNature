@@ -1,11 +1,11 @@
-const { InvalidLanguageError, InvalidURLError } = require("./errors/errors");
-
+const { InvalidLanguageError, InvalidURLError } = require("../errors/errors");
+// Language codes
 const ENGLISH = "en";
 const HEBREW = "he";
 
 exports.ENGLISH = ENGLISH;
 exports.HEBREW = HEBREW;
-
+// DB Model
 exports.dbStructure = class dbStructure {
   constructor(
     preferredLang,
@@ -17,9 +17,10 @@ exports.dbStructure = class dbStructure {
     youtube,
     instagram
   ) {
+    // language validation
     if (preferredLang && (preferredLang !== HEBREW || ENGLISH)) {
       throw new InvalidLanguageError("Invalid language");
-    }
+    } // urls validation
     if (!this._isUrlsValid([facebook, linkedin, youtube, instagram])) {
       throw new InvalidURLError("An invalid URL exists");
     }
@@ -32,7 +33,7 @@ exports.dbStructure = class dbStructure {
     this.youtube = youtube;
     this.instagram = instagram;
   }
-
+  // url validation
   _isUrlsValid(urls) {
     for (let i = 0; urls.length; i++) {
       if (!this._isUrlValid(urls[i])) {
@@ -43,13 +44,14 @@ exports.dbStructure = class dbStructure {
   }
 
   _isUrlValid(url) {
+    // Empty url
     if (!url) {
       return true;
-    }
+    } // URL regex pattern
     var pattern = new RegExp(
       "^(https?:\\/\\/)?" + // protocol
         "((([a-z\\d]([a-z\\d-]*[a-z\\d])*)\\.)+[a-z]{2,}|" + // domain name
-        "((\\d{1,3}\\.){3}\\d{1,3}))" + // OR ip (v4) address
+        "((\\d{1,3}\\.){3}\\d{1,3}))" + // ip address
         "(\\:\\d+)?(\\/[-a-z\\d%_.~+]*)*" + // port and path
         "(\\?[;&a-z\\d%_.~+=-]*)?" + // query string
         "(\\#[-a-z\\d_]*)?$", // fragment locator

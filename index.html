@@ -49,7 +49,9 @@
           class="form-control"
           id="phone"
           required
+          pattern=".{9,10}"
           oninput="setCustomValidity('')"
+          onkeypress="return isNumber(event)"
         />
       </div>
       <div>

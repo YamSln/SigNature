@@ -1,0 +1,93 @@
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <link
+      rel="stylesheet"
+      href="../node_modules/bootstrap/dist/css/bootstrap.min.css"
+    />
+    <link rel="stylesheet" href="../style.css" />
+  </head>
+  <body>
+    <button
+      id="back"
+      class="btn btn-light"
+      style="border-radius: 35px; margin-bottom: 5px"
+      onclick="navigateBack()"
+    >
+      <img id="backIcon" />
+    </button>
+    <form id="form">
+      <div class="form-group">
+        <label id="officeLabel" for="office"></label>
+        <input
+          type="text"
+          class="form-control"
+          id="office"
+          required
+          oninput="setCustomValidity('')"
+        />
+      </div>
+      <div class="form-group">
+        <label id="faxLabel" for="fax"></label>
+        <input
+          type="text"
+          class="form-control"
+          id="fax"
+          required
+          oninput="setCustomValidity('')"
+        />
+      </div>
+      <div class="form-group">
+        <label id="linkedinLabel" for="linkedin"></label>
+        <input
+          type="text"
+          class="form-control"
+          id="linkedin"
+          required
+          oninput="setCustomValidity('')"
+        />
+      </div>
+      <div class="form-group">
+        <label id="facebookLabel" for="facebook"></label>
+        <input
+          type="text"
+          class="form-control"
+          id="facebook"
+          required
+          oninput="setCustomValidity('')"
+        />
+      </div>
+      <div class="form-group">
+        <label id="youtubeLabel" for="youtube"></label>
+        <input
+          type="text"
+          class="form-control"
+          id="youtube"
+          required
+          oninput="setCustomValidity('')"
+        />
+      </div>
+      <div class="form-group">
+        <label id="instagramLabel" for="instagram"></label>
+        <input
+          type="text"
+          class="form-control"
+          id="instagram"
+          required
+          oninput="setCustomValidity('')"
+        />
+      </div>
+      <div>
+        <button
+          id="save"
+          type="button"
+          class="btn btn-success"
+          onclick="onSubmit()"
+        ></button>
+      </div>
+    </form>
+    <script src="./settings.js"></script>
+  </body>
+</html>

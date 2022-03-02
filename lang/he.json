@@ -6,6 +6,10 @@
     "mobile": "נייד",
     "office": "משרד",
     "fax": "פקס",
+    "linkedin": "לינקדאין",
+    "facebook": "פייסבוק",
+    "youtube": "יוטיוב",
+    "instagram": "אינסטגרם",
     "file": "קובץ",
     "settings": "הגדרות",
     "clear": "נקה",
@@ -16,5 +20,7 @@
     "hebrew": "עברית",
     "missingField": "שדה זה הינו חובה",
     "invalidEmail": "כתובת אימייל לא תקינה",
-    "saveFile": "שמירה בשם"
+    "invalidNumber": "מספר טלפון לא תקין",
+    "saveFile": "שמירה בשם",
+    "backIcon": "../assets/icons/arrow-90deg-right.svg"
 }
