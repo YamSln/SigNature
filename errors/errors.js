@@ -18,3 +18,10 @@ exports.InvalidPhoneNumberError = class InvalidPhoneNumberError extends Error {
     this.name = "InvalidPhoneNumberError";
   }
 };
+
+exports.DatabaseError = class DatabaseError extends Error {
+  constructor(message) {
+    super(message);
+    this.name = "DatabaseError";
+  }
+};

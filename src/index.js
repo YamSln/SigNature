@@ -1,11 +1,11 @@
 // ---- First renderer process ----
 const { ipcRenderer } = require("electron");
 
-const { ENGLISH, HEBREW } = require("./src/db.model");
+const { ENGLISH, HEBREW } = require("./db.model");
 // Language dictionary
 let dictionary;
 // Language change event listener
-ipcRenderer.on("languageChange", function (evt, updatedDictionary) {
+ipcRenderer.on("languageChange", (evt, updatedDictionary) => {
   dictionary = updatedDictionary;
   document.getElementById("nameLabel").innerHTML = dictionary.name;
   document.getElementById("posLabel").innerHTML = dictionary.position;
@@ -70,7 +70,7 @@ function validateInput(name, position, email, phone) {
     phone.reportValidity();
     return false;
   } else if (phone.validity.patternMismatch) {
-    phone.setCustomValidity(dictionary.numberTooShort);
+    phone.setCustomValidity(dictionary.invalidNumber);
     phone.reportValidity();
     return false;
   } else {

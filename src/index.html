@@ -1,0 +1,74 @@
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <link
+      rel="stylesheet"
+      href="../node_modules/bootstrap/dist/css/bootstrap.min.css"
+    />
+    <link rel="stylesheet" href="../style.css" />
+    <title>SigNature</title>
+  </head>
+  <body>
+    <form id="form">
+      <div class="form-group">
+        <label id="nameLabel" for="name"></label>
+        <input
+          type="text"
+          class="form-control"
+          id="name"
+          required
+          oninput="setCustomValidity('')"
+        />
+      </div>
+      <div class="form-group">
+        <label id="posLabel" for="position"></label>
+        <input
+          type="text"
+          class="form-control"
+          id="pos"
+          required
+          oninput="setCustomValidity('')"
+        />
+      </div>
+      <div class="form-group">
+        <label id="emailLabel" for="email"></label>
+        <input
+          type="email"
+          class="form-control"
+          id="email"
+          required
+          oninput="setCustomValidity('')"
+        />
+      </div>
+      <div class="form-group">
+        <label id="phoneLabel" for="phone"></label>
+        <input
+          type="text"
+          class="form-control"
+          id="phone"
+          required
+          pattern=".{9,10}"
+          oninput="setCustomValidity('')"
+          onkeypress="return isNumber(event)"
+        />
+      </div>
+      <div>
+        <button
+          id="save"
+          type="button"
+          class="btn btn-success"
+          onclick="onSubmit()"
+        ></button>
+        <button
+          id="clear"
+          type="button"
+          class="btn btn-light"
+          onclick="clearForm()"
+        ></button>
+      </div>
+    </form>
+    <script src="./index.js"></script>
+  </body>
+</html>
