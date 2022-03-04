@@ -86,15 +86,7 @@ function validateInput(name, position, email, phone) {
 
 // ---- Loading ----
 
-function triggerLoading(trigger) {
+ipcRenderer.on("loading", (evt, isLoading) => {
   const loader = document.getElementById("loader");
-  if (trigger) {
-    loader.classList.add("loading");
-  } else {
-    loader.classList.remove("loading");
-  }
-}
-
-ipcRenderer.on("loading", (evt, message) => {
-  triggerLoading(message);
+  triggerLoading(isLoading, loader);
 });

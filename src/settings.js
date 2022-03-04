@@ -17,6 +17,19 @@ ipcRenderer.on("languageChange", function (evt, updatedDictionary) {
   document.getElementById("save").innerHTML = dictionary.save;
   changeItemsDirection(dictionary.lang);
 });
+// Set settings from db
+ipcRenderer.on("set-settings", (evt, settings) => {
+  // Set each input
+  document.querySelectorAll("input").forEach((input) => {
+    const value = settings[input.id];
+    input.value = value.includes(ISRAEL_CALLING_CODE)
+      ? deFormatPhoneNumber(value) // DeFormat phone numbers
+      : value;
+  });
+});
+function init() {
+  ipcRenderer.send("init-settings");
+}
 // Changes direction of elements according to selected language
 function changeItemsDirection(lang) {
   switch (lang) {
@@ -94,3 +107,10 @@ function validateInput(office, fax, linkedin, facebook, youtube, instagram) {
 function navigateBack() {
   ipcRenderer.send("navigate-to-main");
 }
+
+// ---- Loading ----
+
+ipcRenderer.on("loading", (evt, isLoading) => {
+  const loader = document.getElementById("loader");
+  triggerLoading(isLoading, loader);
+});

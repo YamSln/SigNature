@@ -3,13 +3,16 @@ const { app, BrowserWindow, Menu, ipcMain, dialog } = require("electron");
 const { dbHandler } = require("./src/dbHandler");
 const { ENGLISH, HEBREW } = require("./src/db.model");
 const fs = require("fs");
+const { spawn } = require("child_process");
+const path = require("path");
 
 const db = new dbHandler();
 const isMac = isPlatformMac();
+const ONE_SECOND_MILL = 1000;
 
 let win; // Main window
-let languageDictionary; // Dictionary
-let database; // Database object
+let dict; // Dictionary
+
 // Main window
 function createWindow() {
   win = new BrowserWindow({
@@ -25,35 +28,36 @@ function createWindow() {
     win = null;
   });
 }
-// Init language according to preferred language or system language
+// Init language according to preferred language
 function initLanguage() {
-  loadLanguage(database.preferredLang || app.getLocale());
+  db.preferredLang // Has preferred lang
+    ? setDictionary(db.preferredLang) // Set it
+    : setLanguage(app.getLocale()); // Set as system lang and save
 }
-// Loads language, saves to db and renders application menu
-function loadLanguage(lang) {
-  if (lang.includes(HEBREW)) {
-    languageDictionary = require("./lang/he.json");
-    saveLanguage(HEBREW);
-    createMenu();
-  } else {
-    languageDictionary = require("./lang/en.json");
-    saveLanguage(ENGLISH);
-    createMenu();
-  }
+// Load language
+function setDictionary(lang) {
+  dict = lang.includes(HEBREW)
+    ? require("./lang/he.json")
+    : require("./lang/en.json");
+}
+// Sets language, saves to db and renders application menu
+function setLanguage(lang) {
+  setDictionary(lang.includes(HEBREW) ? HEBREW : ENGLISH);
+  saveLanguage(lang.includes(HEBREW) ? HEBREW : ENGLISH);
+  createMenu();
 }
 // Saves and updates language
 function saveLanguage(lang) {
-  database.preferredLang = lang;
-  db.updateDb(database);
+  db.preferredLang = lang;
 }
 // Application Menu
 function createMenu() {
   const fileMenu = {
-    label: languageDictionary.file,
+    label: dict.file,
     submenu: [
       {
         // Settings button
-        label: languageDictionary.settings,
+        label: dict.settings,
         click: navigateToSettings,
       },
       {
@@ -61,34 +65,34 @@ function createMenu() {
       },
       {
         // Exit button
-        label: languageDictionary.exit,
+        label: dict.exit,
         role: isMac ? "close" : "quit",
       },
     ],
   };
   const languageMenu = {
-    label: languageDictionary.language,
+    label: dict.language,
     submenu: [
       {
         // English button
-        label: languageDictionary.english,
+        label: dict.english,
         type: "radio",
         checked: isLanguage(ENGLISH),
         click: () => {
           if (!isLanguage(ENGLISH)) {
-            loadLanguage(ENGLISH);
+            setLanguage(ENGLISH);
             sendLanguageChange();
           }
         },
       },
       {
         // Hebrew button
-        label: languageDictionary.hebrew,
+        label: dict.hebrew,
         type: "radio",
         checked: isLanguage(HEBREW),
         click: () => {
           if (!isLanguage(HEBREW)) {
-            loadLanguage(HEBREW);
+            setLanguage(HEBREW);
             sendLanguageChange();
           }
         },
@@ -102,11 +106,10 @@ function createMenu() {
   Menu.setApplicationMenu(appMenu);
 }
 function isLanguage(lang) {
-  return languageDictionary.lang === lang;
+  return dict.lang === lang;
 }
 // Start initializations and rendering
 app.on("ready", () => {
-  initDatabase();
   initLanguage();
   createWindow();
   createMenu();
@@ -135,13 +138,13 @@ app.on("activate", () => {
 
 function sendLanguageChange() {
   // Language change event
-  win.webContents.send("languageChange", languageDictionary);
+  win.webContents.send("languageChange", dict);
 }
 // Form submission event listener
 ipcMain.on("form-submit", (evt, payload) => {
   dialog // Open save dialog
     .showSaveDialog({
-      title: languageDictionary.saveFile,
+      title: dict.saveFile,
       filters: [
         {
           // Allow only HTML files to be saved
@@ -156,7 +159,9 @@ ipcMain.on("form-submit", (evt, payload) => {
         // Handle file saving
         sendLoadingEvent(evt, true);
         fs.writeFile(file.filePath.toString(), "Signature", (err) => {
-          sendLoadingEvent(evt, false);
+          setTimeout(() => {
+            sendLoadingEvent(evt, false);
+          }, ONE_SECOND_MILL);
         });
       }
     })
@@ -173,6 +178,7 @@ ipcMain.on("navigate-to-main", () => {
 
 function navigateToSettings() {
   win.loadFile("./src/settings.html");
+  win.webContents.send("set-settings", db.settings);
 }
 
 // ---- Loading ----
@@ -183,10 +189,24 @@ function sendLoadingEvent(event, loading) {
 
 // ---- Database ----
 
-function initDatabase() {
-  database = db.dbContent;
-}
+ipcMain.on("database-update", (evt, payload) => {
+  sendLoadingEvent(evt, true);
+  db.updateSettings(payload)
+    .then(() => {
+      setTimeout(() => {
+        evt.sender.send("set-settings", db.settings);
+        sendLoadingEvent(evt, false);
+      }, ONE_SECOND_MILL);
+    })
+    .catch((err) => {
+      dialog.showErrorBox(dict.uxError);
+    });
+});
 
-ipcMain.on("update-database", (evt, payload) => {
-  db.updateDb(payload);
+ipcMain.on("init-settings", (evt) => {
+  sendLoadingEvent(evt, true);
+  evt.sender.send("set-settings", db.settings);
+  setTimeout(() => {
+    sendLoadingEvent(evt, false);
+  }, ONE_SECOND_MILL);
 });

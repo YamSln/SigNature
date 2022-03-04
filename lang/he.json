@@ -23,5 +23,6 @@
     "invalidNumber": "מספר טלפון לא תקין",
     "invalidURL": "כתובת לא תקינה",
     "saveFile": "שמירה בשם",
-    "backIcon": "../assets/icons/arrow-90deg-right.svg"
+    "backIcon": "../assets/icons/arrow-90deg-right.svg",
+    "uxError": "אירעה שגיאה במהלך ביצוע הפעולה האחרונה"
 }

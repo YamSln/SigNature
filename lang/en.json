@@ -23,5 +23,6 @@
     "invalidNumber": "Invalid phone number",
     "invalidURL": "Invalid URL",
     "saveFile": "Save signature",
-    "backIcon": "../assets/icons/arrow-90deg-left.svg"
+    "backIcon": "../assets/icons/arrow-90deg-left.svg",
+    "uxError": "An unexpected error occurred"
 }

@@ -1,11 +1,17 @@
-const ISRAEL_CALLING_CODE = "+972";
+const ISRAEL_CALLING_CODE = "+972 ";
+const LOWER_CHAR_BOUND = 31;
+const UPPER_CHAR_BOUND = 48;
+const OTHER_CHARS = 57;
 // Validate input and allow only numbers
 function isNumber(evt) {
   // Get character code from event
   evt = evt ? evt : window.event;
   var charCode = evt.which ? evt.which : evt.keyCode;
   // Allow input if character code is a number
-  if (charCode > 31 && (charCode < 48 || charCode > 57)) {
+  if (
+    charCode > LOWER_CHAR_BOUND &&
+    (charCode < UPPER_CHAR_BOUND || charCode > OTHER_CHARS)
+  ) {
     return false;
   }
   return true;
@@ -38,4 +44,17 @@ function formatPhoneNumber(number, mobile) {
     "-" +
     number.slice(2)
   );
+}
+// Returns original phone number (unformatted)
+function deFormatPhoneNumber(number) {
+  deFormatted = number.replace("+972 ", "0");
+  return deFormatted.replace("-", "");
+}
+// Loading
+function triggerLoading(trigger, loadingElement) {
+  if (trigger) {
+    loadingElement.classList.add("loading");
+  } else {
+    loadingElement.classList.remove("loading");
+  }
 }
