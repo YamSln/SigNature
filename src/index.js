@@ -74,10 +74,7 @@ function validateInput(name, position, email, phone) {
     phone.reportValidity();
     return false;
   } else {
-    phoneNumber = phone.value;
-    if (phoneNumber[0] == 0) {
-      phoneNumber = phoneNumber.substring(0);
-    }
+    phoneNumber = formatPhoneNumber(phone.value, true);
   } // Returns input values as payload
   return {
     name: name.value,
@@ -86,14 +83,18 @@ function validateInput(name, position, email, phone) {
     phone: phoneNumber,
   };
 }
-// Validate input and allow only numbers
-function isNumber(evt) {
-  // Get character code from event
-  evt = evt ? evt : window.event;
-  var charCode = evt.which ? evt.which : evt.keyCode;
-  // Allow input if character code is a number
-  if (charCode > 31 && (charCode < 48 || charCode > 57)) {
-    return false;
+
+// ---- Loading ----
+
+function triggerLoading(trigger) {
+  const loader = document.getElementById("loader");
+  if (trigger) {
+    loader.classList.add("loading");
+  } else {
+    loader.classList.remove("loading");
   }
-  return true;
 }
+
+ipcRenderer.on("loading", (evt, message) => {
+  triggerLoading(message);
+});

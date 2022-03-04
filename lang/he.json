@@ -21,6 +21,7 @@
     "missingField": "שדה זה הינו חובה",
     "invalidEmail": "כתובת אימייל לא תקינה",
     "invalidNumber": "מספר טלפון לא תקין",
+    "invalidURL": "כתובת לא תקינה",
     "saveFile": "שמירה בשם",
     "backIcon": "../assets/icons/arrow-90deg-right.svg"
 }

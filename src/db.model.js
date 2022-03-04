@@ -35,28 +35,11 @@ exports.dbStructure = class dbStructure {
   }
   // url validation
   _isUrlsValid(urls) {
-    for (let i = 0; urls.length; i++) {
-      if (!this._isUrlValid(urls[i])) {
+    for (url of urls) {
+      if (!this.isURL(url)) {
         return false;
       }
       return true;
     }
-  }
-
-  _isUrlValid(url) {
-    // Empty url
-    if (!url) {
-      return true;
-    } // URL regex pattern
-    var pattern = new RegExp(
-      "^(https?:\\/\\/)?" + // protocol
-        "((([a-z\\d]([a-z\\d-]*[a-z\\d])*)\\.)+[a-z]{2,}|" + // domain name
-        "((\\d{1,3}\\.){3}\\d{1,3}))" + // ip address
-        "(\\:\\d+)?(\\/[-a-z\\d%_.~+]*)*" + // port and path
-        "(\\?[;&a-z\\d%_.~+=-]*)?" + // query string
-        "(\\#[-a-z\\d_]*)?$", // fragment locator
-      "i"
-    );
-    return !!pattern.test(str);
   }
 };

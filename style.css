@@ -20,6 +20,17 @@ html.is-rtl * {
   font-style: normal;
 }
 
+.loading {
+  background: url("./assets/gifs/loading.gif") no-repeat center center;
+  background-color: rgba(255, 255, 255, 0.7);
+  position: absolute;
+  top: 0;
+  left: 0;
+  height: 100%;
+  width: 100%;
+  z-index: 9999999;
+}
+
 @font-face {
   font-family: "Assistant";
   src: url(./assets/font/Assistant-Regular.ttf) format("opentype");

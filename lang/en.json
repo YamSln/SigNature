@@ -21,6 +21,7 @@
     "missingField": "Please fill out this field",
     "invalidEmail": "Invalid email address",
     "invalidNumber": "Invalid phone number",
+    "invalidURL": "Invalid URL",
     "saveFile": "Save signature",
     "backIcon": "../assets/icons/arrow-90deg-left.svg"
 }

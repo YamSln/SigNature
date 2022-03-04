@@ -29,7 +29,67 @@ function changeItemsDirection(lang) {
   }
 }
 // Form submission
-function onSubmit() {}
+function onSubmit() {
+  const office = document.getElementById("office");
+  const fax = document.getElementById("fax");
+  const linkedin = document.getElementById("linkedin");
+  const facebook = document.getElementById("facebook");
+  const youtube = document.getElementById("youtube");
+  const instagram = document.getElementById("instagram");
+  const payload = validateInput(
+    office,
+    fax,
+    linkedin,
+    facebook,
+    youtube,
+    instagram
+  ); // Send valid payload for db update
+  if (payload) {
+    ipcRenderer.send("database-update", payload);
+  }
+}
+// Input validation
+function validateInput(office, fax, linkedin, facebook, youtube, instagram) {
+  let officeNumber;
+  let faxNumber;
+  if (office.validity.valueMissing) {
+    office.setCustomValidity(dictionary.missingField);
+    office.reportValidity();
+    return false;
+  } else if (office.validity.patternMismatch) {
+    office.setCustomValidity(dictionary.invalidNumber);
+    office.reportValidity();
+    return false;
+  } else {
+    officeNumber = formatPhoneNumber(office.value, false);
+  }
+  if (fax.validity.valueMissing) {
+    fax.setCustomValidity(dictionary.missingField);
+    fax.reportValidity();
+    return false;
+  } else if (fax.validity.patternMismatch) {
+    fax.setCustomValidity(dictionary.invalidNumber);
+    fax.reportValidity();
+    return false;
+  } else {
+    faxNumber = formatPhoneNumber(fax.value, false);
+  } // Returns payload to save
+  for (url of [linkedin, facebook, youtube, instagram]) {
+    if (!isURL(url.value)) {
+      url.setCustomValidity(dictionary.invalidURL);
+      url.reportValidity();
+      return false;
+    }
+  }
+  return {
+    office: officeNumber,
+    fax: faxNumber,
+    linkedin: linkedin.value,
+    facebook: facebook.value,
+    youtube: youtube.value,
+    instagram: instagram.value,
+  };
+}
 // Navigates back to first renderer process
 function navigateBack() {
   ipcRenderer.send("navigate-to-main");

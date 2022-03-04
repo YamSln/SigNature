@@ -48,62 +48,61 @@ function saveLanguage(lang) {
 }
 // Application Menu
 function createMenu() {
-  const appMenu = Menu.buildFromTemplate([
-    {
-      label: languageDictionary.file,
-      submenu: [
-        {
-          label: languageDictionary.settings,
-          click: navigateToSettings,
+  const fileMenu = {
+    label: languageDictionary.file,
+    submenu: [
+      {
+        // Settings button
+        label: languageDictionary.settings,
+        click: navigateToSettings,
+      },
+      {
+        type: "separator",
+      },
+      {
+        // Exit button
+        label: languageDictionary.exit,
+        role: isMac ? "close" : "quit",
+      },
+    ],
+  };
+  const languageMenu = {
+    label: languageDictionary.language,
+    submenu: [
+      {
+        // English button
+        label: languageDictionary.english,
+        type: "radio",
+        checked: isLanguage(ENGLISH),
+        click: () => {
+          if (!isLanguage(ENGLISH)) {
+            loadLanguage(ENGLISH);
+            sendLanguageChange();
+          }
         },
-        {
-          type: "separator",
+      },
+      {
+        // Hebrew button
+        label: languageDictionary.hebrew,
+        type: "radio",
+        checked: isLanguage(HEBREW),
+        click: () => {
+          if (!isLanguage(HEBREW)) {
+            loadLanguage(HEBREW);
+            sendLanguageChange();
+          }
         },
-        {
-          label: "Test",
-          click: () => {
-            triggerLoading(true);
-          },
-        },
-        {
-          label: languageDictionary.exit,
-          role: isMac ? "close" : "quit",
-        },
-      ],
-    },
-    {
-      label: languageDictionary.language,
-      submenu: [
-        {
-          label: languageDictionary.english,
-          type: "radio",
-          checked: languageDictionary.lang === ENGLISH,
-          click: () => {
-            if (languageDictionary.lang !== ENGLISH) {
-              loadLanguage(ENGLISH);
-              sendLanguageChange();
-            }
-          },
-        },
-        {
-          label: languageDictionary.hebrew,
-          type: "radio",
-          checked: languageDictionary.lang === HEBREW,
-          click: () => {
-            if (languageDictionary.lang !== HEBREW) {
-              loadLanguage(HEBREW);
-              sendLanguageChange();
-            }
-          },
-        },
-      ],
-    },
-  ]);
+      },
+    ],
+  };
+  // Render menu at an order according to selected language
+  const appMenu = Menu.buildFromTemplate(
+    isLanguage(HEBREW) ? [languageMenu, fileMenu] : [fileMenu, languageMenu]
+  );
   Menu.setApplicationMenu(appMenu);
 }
-// Get database object
-function initDatabase() {
-  database = db.dbContent;
+function isLanguage(lang) {
+  return languageDictionary.lang === lang;
 }
 // Start initializations and rendering
 app.on("ready", () => {
@@ -155,16 +154,14 @@ ipcMain.on("form-submit", (evt, payload) => {
       console.log(file.filePath.toString());
       if (!file.canceled) {
         // Handle file saving
-        triggerLoading(true);
+        sendLoadingEvent(evt, true);
         fs.writeFile(file.filePath.toString(), "Signature", (err) => {
-          console.log(err);
-          triggerLoading(false);
+          sendLoadingEvent(evt, false);
         });
       }
     })
     .catch((err) => {
-      console.log(err);
-      triggerLoading(false);
+      sendLoadingEvent(evt, false);
     });
 });
 
@@ -180,21 +177,16 @@ function navigateToSettings() {
 
 // ---- Loading ----
 
-function triggerLoading(trigger) {
-  if (trigger) {
-    const loading = new BrowserWindow({
-      frame: false,
-      resizable: false,
-      height: 120,
-      width: 120,
-      modal: true,
-      parent: win,
-      opacity: 0.7,
-    });
-    loading.loadFile("./src/loading.html");
-  } else {
-    win.getChildWindows().forEach((window) => {
-      window.close();
-    });
-  }
+function sendLoadingEvent(event, loading) {
+  event.sender.send("loading", loading);
 }
+
+// ---- Database ----
+
+function initDatabase() {
+  database = db.dbContent;
+}
+
+ipcMain.on("update-database", (evt, payload) => {
+  db.updateDb(payload);
+});
