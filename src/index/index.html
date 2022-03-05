@@ -5,11 +5,11 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <link
       rel="stylesheet"
-      href="../node_modules/bootstrap/dist/css/bootstrap.min.css"
+      href="../../node_modules/bootstrap/dist/css/bootstrap.min.css"
     />
-    <link rel="stylesheet" href="../style.css" />
+    <link rel="stylesheet" href="../../style.css" />
     <link rel="stylesheet" href="./index.css" />
-    <script src="../node_modules/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="../../node_modules/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
     <title>SigNature</title>
   </head>
   <body>
@@ -76,6 +76,7 @@
           type="button"
           id="preview"
           class="btn btn-light buttons"
+          onclick="openPreview()"
         ></button>
       </div>
     </form>
@@ -111,5 +112,5 @@
   </body>
   <!-- Renderer process script and utilities script -->
   <script src="./index.js"></script>
-  <script src="./utils.js"></script>
+  <script src="../utils.js"></script>
 </html>

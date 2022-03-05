@@ -5,6 +5,7 @@
     "position": "תפקיד",
     "mobile": "נייד",
     "office": "משרד",
+    "address": "כתובת",
     "fax": "פקס",
     "linkedin": "לינקדאין",
     "facebook": "פייסבוק",
@@ -27,6 +28,6 @@
     "invalidURL": "כתובת לא תקינה",
     "saveFile": "שמירה בשם",
     "savedSuccessfully": "נשמר בהצלחה",
-    "backIcon": "../assets/icons/arrow-90deg-right.svg",
+    "backIcon": "../../assets/icons/arrow-90deg-right.svg",
     "uxError": "אירעה שגיאה במהלך ביצוע הפעולה האחרונה"
 }

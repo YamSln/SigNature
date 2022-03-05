@@ -9,10 +9,23 @@ const EMAIL = TAG_PREFIX + "email";
 const MOBILE = TAG_PREFIX + "mobile";
 const OFFICE = TAG_PREFIX + "office";
 const FAX = TAG_PREFIX + "fax";
+const ADDRESS = TAG_PREFIX + "address";
 const LINKEDIN = TAG_PREFIX + "linkedin";
 const FACEBOOK = TAG_PREFIX + "facebook";
 const YOUTUBE = TAG_PREFIX + "youtube";
 const INSTAGRAM = TAG_PREFIX + "instagram";
+// Constants Export
+exports.NAME = NAME;
+exports.POSITION = POSITION;
+exports.EMAIL = EMAIL;
+exports.MOBILE = MOBILE;
+exports.OFFICE = OFFICE;
+exports.FAX = FAX;
+exports.ADDRESS = ADDRESS;
+exports.LINKEDIN = LINKEDIN;
+exports.FACEBOOK = FACEBOOK;
+exports.YOUTUBE = YOUTUBE;
+exports.INSTAGRAM = INSTAGRAM;
 // Validate input and allow only numbers
 function isNumber(evt) {
   // Get character code from event
@@ -47,13 +60,13 @@ function isURL(url) {
 // Returns formatted phone number
 function formatPhoneNumber(number, mobile) {
   if (number[0] == 0) {
-    number = number.substring(0);
+    number = number.slice(1);
   }
   return (
     ISRAEL_CALLING_CODE +
     number.slice(0, mobile ? 2 : 1) +
     "-" +
-    number.slice(2)
+    number.substring(mobile ? 2 : 1)
   );
 }
 // Returns original phone number (unformatted)

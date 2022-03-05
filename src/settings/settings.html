@@ -5,9 +5,9 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <link
       rel="stylesheet"
-      href="../node_modules/bootstrap/dist/css/bootstrap.min.css"
+      href="../../node_modules/bootstrap/dist/css/bootstrap.min.css"
     />
-    <link rel="stylesheet" href="../style.css" />
+    <link rel="stylesheet" href="../../style.css" />
   </head>
   <body onload="init()">
     <button
@@ -42,6 +42,15 @@
           pattern=".{8,9}"
           oninput="setCustomValidity('')"
           onkeypress="return isNumber(event)"
+        />
+      </div>
+      <div class="form-group">
+        <label id="addressLabel" for="address"></label>
+        <input
+          type="text"
+          class="form-control"
+          id="address"
+          oninput="setCustomValidity('')"
         />
       </div>
       <div class="form-group">
@@ -91,7 +100,7 @@
     </form>
     <!-- Settings renderer process script and utilities script -->
     <script src="./settings.js"></script>
-    <script src="./utils.js"></script>
+    <script src="../utils.js"></script>
     <div id="loader"></div>
   </body>
 </html>

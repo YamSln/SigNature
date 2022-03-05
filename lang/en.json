@@ -5,6 +5,7 @@
     "position": "Position",
     "mobile": "Mobile",
     "office": "Office",
+    "address": "Address",
     "linkedin": "Linkedin",
     "facebook": "Facebook",
     "youtube": "Youtube",
@@ -27,6 +28,6 @@
     "invalidURL": "Invalid URL",
     "saveFile": "Save signature",
     "savedSuccessfully": "Saved Successfully",
-    "backIcon": "../assets/icons/arrow-90deg-left.svg",
+    "backIcon": "../../assets/icons/arrow-90deg-left.svg",
     "uxError": "An unexpected error occurred"
 }

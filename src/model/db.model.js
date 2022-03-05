@@ -6,7 +6,7 @@ const HEBREW = "he";
 exports.ENGLISH = ENGLISH;
 exports.HEBREW = HEBREW;
 // DB Model
-exports.dbStructure = class dbStructure {
+exports.DBStructure = class DBStructure {
   constructor(
     preferredLang,
     office,
@@ -18,13 +18,16 @@ exports.dbStructure = class dbStructure {
     instagram
   ) {
     // language validation
-    if (preferredLang && (preferredLang !== HEBREW || ENGLISH)) {
+    if (!preferredLang) {
+      this.preferredLang = "";
+    } else if (preferredLang !== HEBREW && preferredLang !== ENGLISH) {
       throw new InvalidLanguageError("Invalid language");
+    } else {
+      this.preferredLang = preferredLang;
     } // urls validation
     if (!this._isUrlsValid([facebook, linkedin, youtube, instagram])) {
       throw new InvalidURLError("An invalid URL exists");
     }
-    this.preferredLang = preferredLang;
     this.office = office;
     this.fax = fax;
     this.address = address;
@@ -35,11 +38,27 @@ exports.dbStructure = class dbStructure {
   }
   // url validation
   _isUrlsValid(urls) {
-    for (url of urls) {
-      if (!this.isURL(url)) {
+    for (let url of urls) {
+      if (!this._isURL(url)) {
         return false;
       }
       return true;
     }
+  }
+  _isURL(url) {
+    // Empty url
+    if (!url) {
+      return true;
+    } // URL regex pattern
+    var pattern = new RegExp(
+      "^(https?:\\/\\/)?" + // protocol
+        "((([a-z\\d]([a-z\\d-]*[a-z\\d])*)\\.)+[a-z]{2,}|" + // domain name
+        "((\\d{1,3}\\.){3}\\d{1,3}))" + // ip address
+        "(\\:\\d+)?(\\/[-a-z\\d%_.~+]*)*" + // port and path
+        "(\\?[;&a-z\\d%_.~+=-]*)?" + // query string
+        "(\\#[-a-z\\d_]*)?$", // fragment locator
+      "i"
+    );
+    return !!pattern.test(url);
   }
 };

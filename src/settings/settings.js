@@ -1,7 +1,6 @@
 // ---- Settings renderer process ----
 const { ipcRenderer } = require("electron");
-
-const { ENGLISH, HEBREW } = require("./db.model");
+const { ENGLISH, HEBREW } = require("../model/db.model");
 // Language dictionary
 let dictionary;
 // Language change event listener
@@ -9,6 +8,7 @@ ipcRenderer.on("languageChange", function (evt, updatedDictionary) {
   dictionary = updatedDictionary;
   document.getElementById("officeLabel").innerHTML = dictionary.office;
   document.getElementById("faxLabel").innerHTML = dictionary.fax;
+  document.getElementById("addressLabel").innerHTML = dictionary.address;
   document.getElementById("linkedinLabel").innerHTML = dictionary.linkedin;
   document.getElementById("facebookLabel").innerHTML = dictionary.facebook;
   document.getElementById("youtubeLabel").innerHTML = dictionary.youtube;
@@ -22,9 +22,12 @@ ipcRenderer.on("set-settings", (evt, settings) => {
   // Set each input
   document.querySelectorAll("input").forEach((input) => {
     const value = settings[input.id];
-    input.value = value.includes(ISRAEL_CALLING_CODE)
-      ? deFormatPhoneNumber(value) // DeFormat phone numbers
-      : value;
+    if (value) {
+      // Data has value, if it has format it
+      input.value = value.includes(ISRAEL_CALLING_CODE)
+        ? deFormatPhoneNumber(value) // DeFormat phone numbers
+        : value;
+    }
   });
 });
 function init() {
@@ -45,6 +48,7 @@ function changeItemsDirection(lang) {
 function onSubmit() {
   const office = document.getElementById("office");
   const fax = document.getElementById("fax");
+  const address = document.getElementById("address");
   const linkedin = document.getElementById("linkedin");
   const facebook = document.getElementById("facebook");
   const youtube = document.getElementById("youtube");
@@ -52,6 +56,7 @@ function onSubmit() {
   const payload = validateInput(
     office,
     fax,
+    address,
     linkedin,
     facebook,
     youtube,
@@ -62,7 +67,15 @@ function onSubmit() {
   }
 }
 // Input validation
-function validateInput(office, fax, linkedin, facebook, youtube, instagram) {
+function validateInput(
+  office,
+  fax,
+  address,
+  linkedin,
+  facebook,
+  youtube,
+  instagram
+) {
   let officeNumber;
   let faxNumber;
   if (office.validity.valueMissing) {
@@ -87,7 +100,7 @@ function validateInput(office, fax, linkedin, facebook, youtube, instagram) {
   } else {
     faxNumber = formatPhoneNumber(fax.value, false);
   } // Returns payload to save
-  for (url of [linkedin, facebook, youtube, instagram]) {
+  for (let url of [linkedin, facebook, youtube, instagram]) {
     if (!isURL(url.value)) {
       url.setCustomValidity(dictionary.invalidURL);
       url.reportValidity();
@@ -97,6 +110,7 @@ function validateInput(office, fax, linkedin, facebook, youtube, instagram) {
   return {
     office: officeNumber,
     fax: faxNumber,
+    address: address.value,
     linkedin: linkedin.value,
     facebook: facebook.value,
     youtube: youtube.value,

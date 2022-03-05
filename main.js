@@ -1,7 +1,20 @@
 // ---- Main Process ----
 const { app, BrowserWindow, Menu, ipcMain, dialog } = require("electron");
-const { dbHandler } = require("./src/dbHandler");
-const { ENGLISH, HEBREW } = require("./src/db.model");
+const { dbHandler } = require("./src/model/dbHandler");
+const { ENGLISH, HEBREW } = require("./src/model/db.model");
+const {
+  NAME,
+  EMAIL,
+  POSITION,
+  MOBILE,
+  FAX,
+  OFFICE,
+  ADDRESS,
+  LINKEDIN,
+  FACEBOOK,
+  YOUTUBE,
+  INSTAGRAM,
+} = require("./src/utils");
 const fs = require("fs");
 const { Logger } = require("./log/logger");
 // DB and utils
@@ -23,7 +36,7 @@ function createWindow() {
       defaultFontFamily: "Assistant",
     },
   });
-  win.loadFile("./src/index.html");
+  win.loadFile("./src/index/index.html");
   win.webContents.openDevTools();
   win.on("close", () => {
     win = null;
@@ -163,10 +176,12 @@ ipcMain.on("form-submit", (evt, payload) => {
         const settings = db.settings;
         const signature = require("./db/signature.json")
           .signature.replace(NAME, payload.name)
+          .replace(EMAIL, payload.email)
           .replace(POSITION, payload.position)
           .replace(MOBILE, payload.phone)
           .replace(OFFICE, settings.office)
           .replace(FAX, settings.fax)
+          .replace(ADDRESS, settings.address)
           .replace(LINKEDIN, settings.linkedin)
           .replace(FACEBOOK, settings.facebook)
           .replace(YOUTUBE, settings.youtube)
@@ -186,16 +201,37 @@ ipcMain.on("form-submit", (evt, payload) => {
     });
 });
 
-ipcMain.on("navigate-to-main", () => {
-  win.loadFile("./src/index.html");
+ipcMain.on("preview", (evt, payload) => {
+  const settings = db.settings;
+  console.log(NAME);
+  const signature = require("./db/signature.json")
+    .signature.replace(NAME, payload.name)
+    .replace(EMAIL, payload.email)
+    .replace(POSITION, payload.position)
+    .replace(MOBILE, payload.phone)
+    .replace(OFFICE, settings.office)
+    .replace(ADDRESS, settings.address)
+    .replace(FAX, settings.fax)
+    .replace(LINKEDIN, settings.linkedin)
+    .replace(FACEBOOK, settings.facebook)
+    .replace(YOUTUBE, settings.youtube)
+    .replace(INSTAGRAM, settings.instagram);
+  const previewWindow = new BrowserWindow({
+    parent: win,
+  });
+  previewWindow.loadURL("data:text/html;charset=utf-8," + signature);
 });
 
 // ---- Navigation ----
 
 function navigateToSettings() {
-  win.loadFile("./src/settings.html");
+  win.loadFile("./src/settings/settings.html");
   win.webContents.send("set-settings", db.settings);
 }
+
+ipcMain.on("navigate-to-main", () => {
+  win.loadFile("./src/index/index.html");
+});
 
 // ---- Loading ----
 

@@ -1,6 +1,6 @@
 // ---- Main form renderer process ----
 const { ipcRenderer, shell } = require("electron");
-const { ENGLISH, HEBREW } = require("./db.model");
+const { ENGLISH, HEBREW } = require("../model/db.model");
 // Language dictionary
 let dictionary;
 let filePath;
@@ -111,4 +111,19 @@ function openFile() {
 
 function openFileLocation() {
   shell.showItemInFolder(filePath);
+}
+
+// preview
+
+function openPreview() {
+  const name = document.getElementById("name");
+  const position = document.getElementById("pos");
+  const email = document.getElementById("email");
+  const phone = document.getElementById("phone");
+  // Input validation
+  const payload = validateInput(name, position, email, phone);
+  if (payload) {
+    // Send submission payload
+    ipcRenderer.send("preview", payload);
+  }
 }
