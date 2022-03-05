@@ -3,12 +3,13 @@ const { app, BrowserWindow, Menu, ipcMain, dialog } = require("electron");
 const { dbHandler } = require("./src/dbHandler");
 const { ENGLISH, HEBREW } = require("./src/db.model");
 const fs = require("fs");
-const { spawn } = require("child_process");
-const path = require("path");
-
+const { Logger } = require("./log/logger");
+// DB and utils
 const db = new dbHandler();
 const isMac = isPlatformMac();
 const ONE_SECOND_MILL = 1000;
+// Logging
+const logger = new Logger();
 
 let win; // Main window
 let dict; // Dictionary
@@ -145,6 +146,8 @@ ipcMain.on("form-submit", (evt, payload) => {
   dialog // Open save dialog
     .showSaveDialog({
       title: dict.saveFile,
+      // Default name is email.signature
+      defaultPath: payload.email + ".signature",
       filters: [
         {
           // Allow only HTML files to be saved
@@ -154,19 +157,32 @@ ipcMain.on("form-submit", (evt, payload) => {
       ],
     })
     .then((file) => {
-      console.log(file.filePath.toString());
       if (!file.canceled) {
         // Handle file saving
         sendLoadingEvent(evt, true);
-        fs.writeFile(file.filePath.toString(), "Signature", (err) => {
+        const settings = db.settings;
+        const signature = require("./db/signature.json")
+          .signature.replace(NAME, payload.name)
+          .replace(POSITION, payload.position)
+          .replace(MOBILE, payload.phone)
+          .replace(OFFICE, settings.office)
+          .replace(FAX, settings.fax)
+          .replace(LINKEDIN, settings.linkedin)
+          .replace(FACEBOOK, settings.facebook)
+          .replace(YOUTUBE, settings.youtube)
+          .replace(INSTAGRAM, settings.instagram);
+        fs.writeFile(file.filePath.toString(), signature, (err) => {
           setTimeout(() => {
             sendLoadingEvent(evt, false);
+            evt.sender.send("saved-successfully", file.filePath.toString());
           }, ONE_SECOND_MILL);
         });
       }
     })
     .catch((err) => {
+      logger.error(err, "Main Process");
       sendLoadingEvent(evt, false);
+      dialog.showErrorBox(dict.uxError);
     });
 });
 
@@ -189,6 +205,7 @@ function sendLoadingEvent(event, loading) {
 
 // ---- Database ----
 
+// Update database with new settings
 ipcMain.on("database-update", (evt, payload) => {
   sendLoadingEvent(evt, true);
   db.updateSettings(payload)
@@ -199,10 +216,12 @@ ipcMain.on("database-update", (evt, payload) => {
       }, ONE_SECOND_MILL);
     })
     .catch((err) => {
+      logger.error(err, "Main Process");
+      sendLoadingEvent(evt, false);
       dialog.showErrorBox(dict.uxError);
     });
 });
-
+// Loads settings from db and sends to settings renderer process
 ipcMain.on("init-settings", (evt) => {
   sendLoadingEvent(evt, true);
   evt.sender.send("set-settings", db.settings);

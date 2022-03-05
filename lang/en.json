@@ -14,6 +14,9 @@
     "settings": "Settings",
     "clear": "Clear",
     "save": "Save",
+    "open": "Open",
+    "preview": "Preview",
+    "openFolder": "Open Folder",
     "exit": "Exit",
     "language": "Language",
     "english": "English",
@@ -23,6 +26,7 @@
     "invalidNumber": "Invalid phone number",
     "invalidURL": "Invalid URL",
     "saveFile": "Save signature",
+    "savedSuccessfully": "Saved Successfully",
     "backIcon": "../assets/icons/arrow-90deg-left.svg",
     "uxError": "An unexpected error occurred"
 }

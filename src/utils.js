@@ -2,6 +2,17 @@ const ISRAEL_CALLING_CODE = "+972 ";
 const LOWER_CHAR_BOUND = 31;
 const UPPER_CHAR_BOUND = 48;
 const OTHER_CHARS = 57;
+const TAG_PREFIX = "!!";
+const NAME = TAG_PREFIX + "name";
+const POSITION = TAG_PREFIX + "pos";
+const EMAIL = TAG_PREFIX + "email";
+const MOBILE = TAG_PREFIX + "mobile";
+const OFFICE = TAG_PREFIX + "office";
+const FAX = TAG_PREFIX + "fax";
+const LINKEDIN = TAG_PREFIX + "linkedin";
+const FACEBOOK = TAG_PREFIX + "facebook";
+const YOUTUBE = TAG_PREFIX + "youtube";
+const INSTAGRAM = TAG_PREFIX + "instagram";
 // Validate input and allow only numbers
 function isNumber(evt) {
   // Get character code from event

@@ -8,9 +8,12 @@
       href="../node_modules/bootstrap/dist/css/bootstrap.min.css"
     />
     <link rel="stylesheet" href="../style.css" />
+    <link rel="stylesheet" href="./index.css" />
+    <script src="../node_modules/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
     <title>SigNature</title>
   </head>
   <body>
+    <!-- Main Form -->
     <form id="form">
       <div class="form-group">
         <label id="nameLabel" for="name"></label>
@@ -54,23 +57,59 @@
           onkeypress="return isNumber(event)"
         />
       </div>
-      <div>
+      <div class="buttons-container">
+        <div class="buttons">
+          <button
+            id="save"
+            type="button"
+            class="btn btn-success"
+            onclick="onSubmit()"
+          ></button>
+          <button
+            id="clear"
+            type="button"
+            class="btn btn-light"
+            onclick="clearForm()"
+          ></button>
+        </div>
         <button
-          id="save"
           type="button"
-          class="btn btn-success"
-          onclick="onSubmit()"
-        ></button>
-        <button
-          id="clear"
-          type="button"
-          class="btn btn-light"
-          onclick="clearForm()"
+          id="preview"
+          class="btn btn-light buttons"
         ></button>
       </div>
     </form>
-    <script src="./index.js"></script>
-    <script src="./utils.js"></script>
+    <!-- Toast Notification -->
+    <div
+      style="position: fixed; bottom: 5"
+      id="alert"
+      aria-live="assertive"
+      aria-atomic="true"
+      class="toast"
+      data-autohide="false"
+    >
+      <div class="toast-header">
+        <button
+          type="button"
+          class="btn-close"
+          data-bs-dismiss="toast"
+          style="margin-left: 5; margin-right: 5"
+        ></button>
+        <div id="toast-title"></div>
+      </div>
+      <div class="toast-body">
+        <button id="open" class="btn btn-success" onclick="openFile()"></button>
+        <button
+          id="open-folder"
+          class="btn btn-light"
+          onclick="openFileLocation()"
+        ></button>
+      </div>
+    </div>
+    <!-- Loading -->
     <div id="loader"></div>
   </body>
+  <!-- Renderer process script and utilities script -->
+  <script src="./index.js"></script>
+  <script src="./utils.js"></script>
 </html>

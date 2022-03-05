@@ -14,6 +14,9 @@
     "settings": "הגדרות",
     "clear": "נקה",
     "save": "שמור",
+    "open": "פתח",
+    "preview": "תצוגה מקדימה",
+    "openFolder": "פתח בתיקייה",
     "exit": "יציאה",
     "language": "שפה",
     "english": "אנגלית",
@@ -23,6 +26,7 @@
     "invalidNumber": "מספר טלפון לא תקין",
     "invalidURL": "כתובת לא תקינה",
     "saveFile": "שמירה בשם",
+    "savedSuccessfully": "נשמר בהצלחה",
     "backIcon": "../assets/icons/arrow-90deg-right.svg",
     "uxError": "אירעה שגיאה במהלך ביצוע הפעולה האחרונה"
 }

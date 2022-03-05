@@ -1,9 +1,9 @@
-// ---- First renderer process ----
-const { ipcRenderer } = require("electron");
-
+// ---- Main form renderer process ----
+const { ipcRenderer, shell } = require("electron");
 const { ENGLISH, HEBREW } = require("./db.model");
 // Language dictionary
 let dictionary;
+let filePath;
 // Language change event listener
 ipcRenderer.on("languageChange", (evt, updatedDictionary) => {
   dictionary = updatedDictionary;
@@ -13,6 +13,11 @@ ipcRenderer.on("languageChange", (evt, updatedDictionary) => {
   document.getElementById("phoneLabel").innerHTML = dictionary.mobile;
   document.getElementById("save").innerHTML = dictionary.save;
   document.getElementById("clear").innerHTML = dictionary.clear;
+  document.getElementById("preview").innerHTML = dictionary.preview;
+  document.getElementById("open").innerHTML = dictionary.open;
+  document.getElementById("open-folder").innerHTML = dictionary.openFolder;
+  document.getElementById("toast-title").innerHTML =
+    dictionary.savedSuccessfully;
   changeItemsDirection(dictionary.lang);
 });
 // Changes direction of elements according to selected language
@@ -39,7 +44,7 @@ function onSubmit() {
     ipcRenderer.send("form-submit", payload);
   }
 }
-
+// Resets form fields
 function clearForm() {
   document.getElementById("form").reset();
 }
@@ -90,3 +95,20 @@ ipcRenderer.on("loading", (evt, isLoading) => {
   const loader = document.getElementById("loader");
   triggerLoading(isLoading, loader);
 });
+
+// ---- Toast Notification ----
+
+ipcRenderer.on("saved-successfully", (evt, payload) => {
+  filePath = payload; // Set saved file path
+  const toast = document.getElementById("alert");
+  const alert = new bootstrap.Toast(toast);
+  alert.show();
+});
+
+function openFile() {
+  shell.openPath(filePath);
+}
+
+function openFileLocation() {
+  shell.showItemInFolder(filePath);
+}
