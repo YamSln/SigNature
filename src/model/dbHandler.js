@@ -43,6 +43,7 @@ exports.dbHandler = class dbHandler {
           this.db.office,
           this.db.fax,
           this.db.address,
+          this.db.website,
           this.db.linkedin,
           this.db.facebook,
           this.db.youtube,
@@ -64,6 +65,7 @@ exports.dbHandler = class dbHandler {
           settings.office,
           settings.fax,
           settings.address,
+          settings.website,
           settings.linkedin,
           settings.facebook,
           settings.youtube,
@@ -84,7 +86,7 @@ exports.dbHandler = class dbHandler {
   }
   _handleDBUpdate(err) {
     if (err) {
-      throw new DatabaseError("An unexpected error occurred");
+      throw new DatabaseError("Error", "An unexpected error occurred");
     } else {
       this._rCache();
       this.db = require(dbUrl);

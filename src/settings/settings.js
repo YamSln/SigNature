@@ -9,6 +9,7 @@ ipcRenderer.on("languageChange", function (evt, updatedDictionary) {
   document.getElementById("officeLabel").innerHTML = dictionary.office;
   document.getElementById("faxLabel").innerHTML = dictionary.fax;
   document.getElementById("addressLabel").innerHTML = dictionary.address;
+  document.getElementById("websiteLabel").innerHTML = dictionary.website;
   document.getElementById("linkedinLabel").innerHTML = dictionary.linkedin;
   document.getElementById("facebookLabel").innerHTML = dictionary.facebook;
   document.getElementById("youtubeLabel").innerHTML = dictionary.youtube;
@@ -49,6 +50,7 @@ function onSubmit() {
   const office = document.getElementById("office");
   const fax = document.getElementById("fax");
   const address = document.getElementById("address");
+  const website = document.getElementById("website");
   const linkedin = document.getElementById("linkedin");
   const facebook = document.getElementById("facebook");
   const youtube = document.getElementById("youtube");
@@ -57,6 +59,7 @@ function onSubmit() {
     office,
     fax,
     address,
+    website,
     linkedin,
     facebook,
     youtube,
@@ -71,6 +74,7 @@ function validateInput(
   office,
   fax,
   address,
+  website,
   linkedin,
   facebook,
   youtube,
@@ -100,7 +104,7 @@ function validateInput(
   } else {
     faxNumber = formatPhoneNumber(fax.value, false);
   } // Returns payload to save
-  for (let url of [linkedin, facebook, youtube, instagram]) {
+  for (let url of [website, linkedin, facebook, youtube, instagram]) {
     if (!isURL(url.value)) {
       url.setCustomValidity(dictionary.invalidURL);
       url.reportValidity();
@@ -111,6 +115,7 @@ function validateInput(
     office: officeNumber,
     fax: faxNumber,
     address: address.value,
+    website: website.value,
     linkedin: linkedin.value,
     facebook: facebook.value,
     youtube: youtube.value,
@@ -128,3 +133,11 @@ ipcRenderer.on("loading", (evt, isLoading) => {
   const loader = document.getElementById("loader");
   triggerLoading(isLoading, loader);
 });
+
+function triggerLoading(trigger, loadingElement) {
+  if (trigger) {
+    loadingElement.classList.add("loading");
+  } else {
+    loadingElement.classList.remove("loading");
+  }
+}

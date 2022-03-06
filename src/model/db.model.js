@@ -12,6 +12,7 @@ exports.DBStructure = class DBStructure {
     office,
     fax,
     address,
+    website,
     facebook,
     linkedin,
     youtube,
@@ -25,12 +26,13 @@ exports.DBStructure = class DBStructure {
     } else {
       this.preferredLang = preferredLang;
     } // urls validation
-    if (!this._isUrlsValid([facebook, linkedin, youtube, instagram])) {
+    if (!this._isUrlsValid([website, facebook, linkedin, youtube, instagram])) {
       throw new InvalidURLError("An invalid URL exists");
     }
     this.office = office;
     this.fax = fax;
     this.address = address;
+    this.website = website;
     this.facebook = facebook;
     this.linkedin = linkedin;
     this.youtube = youtube;

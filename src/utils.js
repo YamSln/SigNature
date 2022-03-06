@@ -1,7 +1,10 @@
-const ISRAEL_CALLING_CODE = "+972 ";
+// ---- Utils ----
+const ISRAEL_CALLING_CODE = "+972";
 const LOWER_CHAR_BOUND = 31;
 const UPPER_CHAR_BOUND = 48;
 const OTHER_CHARS = 57;
+const MAX_MOBILE = 9;
+const MAX_NONE_MOBILE = 8;
 const TAG_PREFIX = "!!";
 const NAME = TAG_PREFIX + "name";
 const POSITION = TAG_PREFIX + "pos";
@@ -15,17 +18,18 @@ const FACEBOOK = TAG_PREFIX + "facebook";
 const YOUTUBE = TAG_PREFIX + "youtube";
 const INSTAGRAM = TAG_PREFIX + "instagram";
 // Constants Export
-exports.NAME = NAME;
-exports.POSITION = POSITION;
-exports.EMAIL = EMAIL;
-exports.MOBILE = MOBILE;
-exports.OFFICE = OFFICE;
-exports.FAX = FAX;
-exports.ADDRESS = ADDRESS;
-exports.LINKEDIN = LINKEDIN;
-exports.FACEBOOK = FACEBOOK;
-exports.YOUTUBE = YOUTUBE;
-exports.INSTAGRAM = INSTAGRAM;
+module.exports.ISRAEL_CALLING_CODE = ISRAEL_CALLING_CODE;
+module.exports.NAME = NAME;
+module.exports.POSITION = POSITION;
+module.exports.EMAIL = EMAIL;
+module.exports.MOBILE = MOBILE;
+module.exports.OFFICE = OFFICE;
+module.exports.FAX = FAX;
+module.exports.ADDRESS = ADDRESS;
+module.exports.LINKEDIN = LINKEDIN;
+module.exports.FACEBOOK = FACEBOOK;
+module.exports.YOUTUBE = YOUTUBE;
+module.exports.INSTAGRAM = INSTAGRAM;
 // Validate input and allow only numbers
 function isNumber(evt) {
   // Get character code from event
@@ -59,11 +63,11 @@ function isURL(url) {
 }
 // Returns formatted phone number
 function formatPhoneNumber(number, mobile) {
-  if (number[0] == 0) {
+  if (number.length === mobile ? MAX_MOBILE : MAX_NONE_MOBILE) {
     number = number.slice(1);
   }
   return (
-    ISRAEL_CALLING_CODE +
+    `${ISRAEL_CALLING_CODE} ` +
     number.slice(0, mobile ? 2 : 1) +
     "-" +
     number.substring(mobile ? 2 : 1)
@@ -71,7 +75,7 @@ function formatPhoneNumber(number, mobile) {
 }
 // Returns original phone number (unformatted)
 function deFormatPhoneNumber(number) {
-  deFormatted = number.replace("+972 ", "0");
+  deFormatted = number.replace(`${ISRAEL_CALLING_CODE} `, "0");
   return deFormatted.replace("-", "");
 }
 // Loading

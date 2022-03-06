@@ -1,22 +1,30 @@
 // ---- Main Process ----
-const { app, BrowserWindow, Menu, ipcMain, dialog } = require("electron");
+const {
+  app,
+  BrowserWindow,
+  Menu,
+  ipcMain,
+  dialog,
+  shell,
+} = require("electron");
 const { dbHandler } = require("./src/model/dbHandler");
 const { ENGLISH, HEBREW } = require("./src/model/db.model");
-const {
-  NAME,
-  EMAIL,
-  POSITION,
-  MOBILE,
-  FAX,
-  OFFICE,
-  ADDRESS,
-  LINKEDIN,
-  FACEBOOK,
-  YOUTUBE,
-  INSTAGRAM,
-} = require("./src/utils");
 const fs = require("fs");
 const { Logger } = require("./log/logger");
+const {
+  NAME,
+  ADDRESS,
+  EMAIL,
+  FACEBOOK,
+  FAX,
+  INSTAGRAM,
+  LINKEDIN,
+  MOBILE,
+  OFFICE,
+  POSITION,
+  YOUTUBE,
+  WEBSITE,
+} = require("./src/utils");
 // DB and utils
 const db = new dbHandler();
 const isMac = isPlatformMac();
@@ -26,7 +34,8 @@ const logger = new Logger();
 
 let win; // Main window
 let dict; // Dictionary
-
+// Disable chrome hardware acceleration
+app.disableHardwareAcceleration();
 // Main window
 function createWindow() {
   win = new BrowserWindow({
@@ -35,6 +44,9 @@ function createWindow() {
       contextIsolation: false,
       defaultFontFamily: "Assistant",
     },
+    width: 600,
+    height: 800,
+    resizable: false,
   });
   win.loadFile("./src/index/index.html");
   win.webContents.openDevTools();
@@ -173,19 +185,7 @@ ipcMain.on("form-submit", (evt, payload) => {
       if (!file.canceled) {
         // Handle file saving
         sendLoadingEvent(evt, true);
-        const settings = db.settings;
-        const signature = require("./db/signature.json")
-          .signature.replace(NAME, payload.name)
-          .replace(EMAIL, payload.email)
-          .replace(POSITION, payload.position)
-          .replace(MOBILE, payload.phone)
-          .replace(OFFICE, settings.office)
-          .replace(FAX, settings.fax)
-          .replace(ADDRESS, settings.address)
-          .replace(LINKEDIN, settings.linkedin)
-          .replace(FACEBOOK, settings.facebook)
-          .replace(YOUTUBE, settings.youtube)
-          .replace(INSTAGRAM, settings.instagram);
+        const signature = generateSignature(payload);
         fs.writeFile(file.filePath.toString(), signature, (err) => {
           setTimeout(() => {
             sendLoadingEvent(evt, false);
@@ -202,25 +202,42 @@ ipcMain.on("form-submit", (evt, payload) => {
 });
 
 ipcMain.on("preview", (evt, payload) => {
+  try {
+    sendLoadingEvent(evt, true);
+    const signature = generateSignature(payload);
+    const previewWindow = new BrowserWindow({
+      parent: win,
+      modal: true,
+      resizable: false,
+      width: 600,
+      height: 400,
+    });
+    previewWindow.menuBarVisible = false;
+    previewWindow.loadURL("data:text/html;charset=utf-8," + signature);
+  } catch (err) {
+    logger.error(err);
+    dialog.showErrorBox("Error", "An unexpected error occurred");
+  } finally {
+    sendLoadingEvent(evt, false);
+  }
+});
+
+function generateSignature(payload) {
   const settings = db.settings;
-  console.log(NAME);
-  const signature = require("./db/signature.json")
+  return require("./db/signature.json")
     .signature.replace(NAME, payload.name)
     .replace(EMAIL, payload.email)
     .replace(POSITION, payload.position)
     .replace(MOBILE, payload.phone)
     .replace(OFFICE, settings.office)
-    .replace(ADDRESS, settings.address)
     .replace(FAX, settings.fax)
+    .replace(ADDRESS, settings.address)
+    .replace(WEBSITE, settings.website)
     .replace(LINKEDIN, settings.linkedin)
     .replace(FACEBOOK, settings.facebook)
     .replace(YOUTUBE, settings.youtube)
     .replace(INSTAGRAM, settings.instagram);
-  const previewWindow = new BrowserWindow({
-    parent: win,
-  });
-  previewWindow.loadURL("data:text/html;charset=utf-8," + signature);
-});
+}
 
 // ---- Navigation ----
 
