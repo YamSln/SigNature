@@ -1,2 +1,12 @@
 2022-3-6 22:59:22 ERROR | Main Process: ReferenceError: NAME is not defined
 2022-3-6 23:6:59 ERROR | : ReferenceError: WEBSITE is not defined
+2022-3-7 22:33:7 ERROR | : TypeError: Cannot read properties of undefined (reading 'toString')
+2022-3-7 22:42:43 ERROR | : TypeError: Cannot read properties of undefined (reading 'match')
+2022-3-7 22:44:10 ERROR | : TypeError: Cannot read properties of undefined (reading 'match')
+2022-3-7 22:44:52 ERROR | : TypeError: Cannot read properties of undefined (reading 'match')
+2022-3-7 23:6:22 ERROR | : ReferenceError: signature is not defined
+2022-3-7 23:6:23 ERROR | : ReferenceError: signature is not defined
+2022-3-7 23:6:25 ERROR | : ReferenceError: signature is not defined
+2022-3-7 23:6:35 ERROR | Main Process: ReferenceError: signature is not defined
+2022-3-7 23:21:38 ERROR | : TypeError: Cannot read properties of undefined (reading 'replace')
+2022-3-7 23:21:42 ERROR | : TypeError: Cannot read properties of undefined (reading 'replace')

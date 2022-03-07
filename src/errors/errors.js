@@ -25,3 +25,17 @@ exports.DatabaseError = class DatabaseError extends Error {
     this.name = "DatabaseError";
   }
 };
+
+exports.IllegalArgumentError = class IllegalArgumentError extends Error {
+  constructor(message) {
+    super(message);
+    this.name = "IllegalArgumentError";
+  }
+};
+
+exports.MissingResourceError = class MissingResourceError extends Error {
+  constructor(message) {
+    super(message);
+    this.name = "MissingResourceError";
+  }
+};

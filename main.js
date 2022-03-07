@@ -25,11 +25,13 @@ const {
   YOUTUBE,
   WEBSITE,
 } = require("./src/utils");
+const { MissingResourceError } = require("./src/errors/errors");
+const path = require("path");
 require("dotenv").config();
 // DB and utils
 const db = new dbHandler();
 const isMac = isPlatformMac();
-const ONE_SECOND_MILL = 1000;
+const TIMEOUT = 500;
 // Logging
 const logger = new Logger();
 
@@ -202,16 +204,16 @@ ipcMain.on("form-submit", (evt, payload) => {
         const signature = generateSignature(payload);
         fs.writeFile(file.filePath.toString(), signature, (err) => {
           setTimeout(() => {
-            sendLoadingEvent(evt, false);
             evt.sender.send("saved-successfully", file.filePath.toString());
-          }, ONE_SECOND_MILL);
+            sendLoadingEvent(evt, false);
+          }, TIMEOUT);
         });
       }
     })
     .catch((err) => {
       logger.error(err, "Main Process");
+      dialog.showErrorBox(dict.error, dict.uxError);
       sendLoadingEvent(evt, false);
-      dialog.showErrorBox(dict.uxError);
     });
 });
 
@@ -231,16 +233,23 @@ ipcMain.on("preview", (evt, payload) => {
     previewWindow.loadURL("data:text/html;charset=utf-8," + signature);
   } catch (err) {
     logger.error(err);
-    dialog.showErrorBox("Error", dict.uxError);
+    dialog.showErrorBox(dict.error, dict.uxError);
   } finally {
     sendLoadingEvent(evt, false);
   }
 });
-
+// Load signature from local db
 function generateSignature(payload) {
   const settings = db.settings;
-  return require("./db/signature.json")
-    .signature.replace(NAME, payload.name)
+  let signature;
+  try {
+    signature = db.signatureTemplate;
+  } catch {
+    throw new MissingResourceError("Signature is not loaded");
+  }
+  // Replace all flags with use input
+  return signature
+    .replace(NAME, payload.name)
     .replace(EMAIL, payload.email)
     .replace(POSITION, payload.position)
     .replace(MOBILE, payload.phone)
@@ -254,11 +263,52 @@ function generateSignature(payload) {
     .replace(INSTAGRAM, settings.instagram);
 }
 
+ipcMain.on("browse-template", (evt) => {
+  dialog // Open dialog
+    .showOpenDialog({
+      title: dict.browseLabel,
+      filters: [{ name: "HTML Files", extensions: ["HTML"] }],
+      properties: ["openFile"],
+    }) // Read from file
+    .then((file) => {
+      if (!file.canceled) {
+        sendLoadingEvent(evt, true);
+        const filePath = file.filePaths[0];
+        fs.readFile(filePath, (err, data) => {
+          if (!err) {
+            // Save data in db
+            const fileName = path.basename(filePath);
+            db.updateSignature(fileName, data.toString())
+              .then(() => {
+                setTimeout(() => {
+                  evt.sender.send("signature-uploaded", fileName);
+                  sendLoadingEvent(evt, false);
+                }, TIMEOUT);
+              })
+              .catch((err) => {
+                logger.error(err);
+                dialog.showErrorBox(dict.error, dict.uxError);
+                sendLoadingEvent(evt, false);
+              });
+          }
+        });
+      }
+    })
+    .catch((err) => {
+      logger.error(err);
+      dialog.showErrorBox(dict.error, dict.uxError);
+      sendLoadingEvent(evt, false);
+    });
+});
+
 // ---- Navigation ----
 
 function navigateToSettings() {
   win.loadFile("./src/settings/settings.html");
-  win.webContents.send("set-settings", db.settings);
+  win.webContents.send("set-settings", {
+    ...db.settings,
+    template: db.signatureName,
+  });
 }
 
 ipcMain.on("navigate-to-main", () => {
@@ -279,21 +329,27 @@ ipcMain.on("database-update", (evt, payload) => {
   db.updateSettings(payload)
     .then(() => {
       setTimeout(() => {
-        evt.sender.send("set-settings", db.settings);
+        evt.sender.send("set-settings", {
+          ...db.settings,
+          template: db.signatureName,
+        });
         sendLoadingEvent(evt, false);
-      }, ONE_SECOND_MILL);
+      }, TIMEOUT);
     })
     .catch((err) => {
       logger.error(err, "Main Process");
       sendLoadingEvent(evt, false);
-      dialog.showErrorBox(dict.uxError);
+      dialog.showErrorBox(dict.error, dict.uxError);
     });
 });
 // Loads settings from db and sends to settings renderer process
 ipcMain.on("init-settings", (evt) => {
   sendLoadingEvent(evt, true);
-  evt.sender.send("set-settings", db.settings);
+  evt.sender.send("set-settings", {
+    ...db.settings,
+    template: db.signatureName,
+  });
   setTimeout(() => {
     sendLoadingEvent(evt, false);
-  }, ONE_SECOND_MILL);
+  }, TIMEOUT);
 });

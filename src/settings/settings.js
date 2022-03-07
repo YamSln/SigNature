@@ -1,5 +1,5 @@
 // ---- Settings renderer process ----
-const { ipcRenderer } = require("electron");
+const { ipcRenderer, dialog, app } = require("electron");
 const { ENGLISH, HEBREW } = require("../model/db.model");
 // Language dictionary
 let dictionary;
@@ -32,6 +32,10 @@ ipcRenderer.on("set-settings", (evt, settings) => {
         : value;
     }
   });
+});
+ipcRenderer.on("signature-uploaded", (evt, name) => {
+  console.log(name);
+  document.getElementById("template").value = name;
 });
 function init() {
   ipcRenderer.send("init-settings");
@@ -124,6 +128,11 @@ function validateInput(
     instagram: instagram.value,
   };
 }
+
+function browseTemplate() {
+  ipcRenderer.send("browse-template");
+}
+
 // Navigates back to first renderer process
 function navigateBack() {
   ipcRenderer.send("navigate-to-main");
@@ -146,6 +155,7 @@ function triggerLoading(trigger, loadingElement) {
 // Set buttons event listeners
 window.onload = () => {
   init();
+  document.getElementById("browse").onclick = browseTemplate;
   document.getElementById("back").onclick = navigateBack;
   document.getElementById("save").onclick = onSubmit;
   document.querySelectorAll("input").forEach((input) => {

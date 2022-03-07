@@ -1,8 +1,12 @@
 const fs = require("fs");
-const { DatabaseError } = require("../errors/errors");
+const { DatabaseError, IllegalArgumentError } = require("../errors/errors");
 const { ENGLISH, HEBREW, DBStructure } = require("./db.model");
 
 const dbUrl = require("path").resolve(__dirname, "../../db/db.json");
+const signatureUrl = require("path").resolve(
+  __dirname,
+  "../../db/signature.json"
+);
 // DB handler, handles db connection and operations
 exports.dbHandler = class dbHandler {
   constructor() {
@@ -12,6 +16,11 @@ exports.dbHandler = class dbHandler {
       // DB is empty
       this._initDB();
     }
+    try {
+      this.signature = require(signatureUrl);
+    } catch {
+      this._initSignature();
+    }
   } // Returns a copy of the db object
   get preferredLang() {
     return this.db.preferredLang;
@@ -19,9 +28,26 @@ exports.dbHandler = class dbHandler {
   set preferredLang(lang) {
     this._updatePreferredLanguage(lang);
   }
-  //Returns settings from db
+  // Returns settings from db
   get settings() {
     return this.db;
+  }
+  // Returns signature string
+  get signatureTemplate() {
+    return this.signature.template;
+  }
+  // Returns signature name
+  get signatureName() {
+    return this.signature.name;
+  }
+  // Updates signature string
+  updateSignature(name, signature) {
+    try {
+      this._updateSignature(name, signature);
+      return Promise.resolve(true);
+    } catch (DatabaseError) {
+      return Promise.reject(DatabaseError);
+    }
   }
   // Update settings
   updateSettings(settings) {
@@ -77,12 +103,35 @@ exports.dbHandler = class dbHandler {
       }
     );
   }
+  _updateSignature(name, signature) {
+    if (signature.match(/script|iframe|webview/)) {
+      throw new IllegalArgumentError("Illegal Signature");
+    }
+    fs.writeFile(
+      signatureUrl,
+      JSON.stringify({ name, template: signature }),
+      (err) => {
+        this._handleSignatureUpdate(err);
+      }
+    );
+  }
   // Initialize DB
   _initDB() {
     this.db = {};
     fs.writeFile(dbUrl, JSON.stringify(new DBStructure()), (err) => {
       this._handleDBUpdate(err);
     });
+  }
+  // Initialize Signature
+  _initSignature() {
+    this.db = {};
+    fs.writeFile(
+      signatureUrl,
+      JSON.stringify({ name: "", template: "" }),
+      (err) => {
+        this._handleDBUpdate(err);
+      }
+    );
   }
   _handleDBUpdate(err) {
     if (err) {
@@ -92,8 +141,17 @@ exports.dbHandler = class dbHandler {
       this.db = require(dbUrl);
     }
   }
+  _handleSignatureUpdate(err) {
+    if (err) {
+      throw new DatabaseError("Error", "An unexpected error occurred");
+    } else {
+      this._rCache();
+      this.signature = require(signatureUrl);
+    }
+  }
   // Cache refresh for db file
   _rCache() {
     delete require.cache[require.resolve(dbUrl)];
+    delete require.cache[require.resolve(signatureUrl)];
   }
 };
