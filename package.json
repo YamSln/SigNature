@@ -1,10 +1,11 @@
 {
   "name": "sig-nature",
+  "productName": "SigNature",
   "version": "1.0.0",
   "description": "SigNature creation app",
   "main": "main.js",
   "scripts": {
-    "start": "electron . set ENV=dev",
+    "start": "electron .",
     "test": "electron-test",
     "pack": "electron-builder --dir",
     "dist": "electron-builder"

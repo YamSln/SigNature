@@ -20,26 +20,42 @@
     <!-- Settings Form -->
     <form id="form">
       <div class="form-group">
-        <label id="officeLabel" for="office"></label>
-        <input
-          type="number"
-          class="form-control"
-          id="office"
-          required
-          min="10000000"
-          max="99999999"
-        />
+        <label id="templateLabel" for="template"></label>
+        <div style="display: flex; flex-wrap: wrap; gap: 5px">
+          <input
+            style="flex: 1"
+            class="form-control"
+            type="text"
+            name="template"
+            id="template"
+            required
+          />
+          <button type="button" id="browse" class="btn btn-success"></button>
+        </div>
       </div>
-      <div class="form-group">
-        <label id="faxLabel" for="fax"></label>
-        <input
-          type="number"
-          class="form-control"
-          id="fax"
-          required
-          min="10000000"
-          max="99999999"
-        />
+      <div style="display: flex; flex-wrap: wrap; gap: 5px">
+        <div class="form-group" style="flex: 1">
+          <label id="officeLabel" for="office"></label>
+          <input
+            type="number"
+            class="form-control"
+            id="office"
+            required
+            min="10000000"
+            max="99999999"
+          />
+        </div>
+        <div class="form-group" style="flex: 1">
+          <label id="faxLabel" for="fax"></label>
+          <input
+            type="number"
+            class="form-control"
+            id="fax"
+            required
+            min="10000000"
+            max="99999999"
+          />
+        </div>
       </div>
       <div class="form-group">
         <label id="addressLabel" for="address"></label>

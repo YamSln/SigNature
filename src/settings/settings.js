@@ -14,6 +14,8 @@ ipcRenderer.on("languageChange", function (evt, updatedDictionary) {
   document.getElementById("facebookLabel").innerHTML = dictionary.facebook;
   document.getElementById("youtubeLabel").innerHTML = dictionary.youtube;
   document.getElementById("instagramLabel").innerHTML = dictionary.instagram;
+  document.getElementById("templateLabel").innerHTML = dictionary.template;
+  document.getElementById("browse").innerHTML = dictionary.browse;
   document.getElementById("backIcon").src = dictionary.backIcon;
   document.getElementById("save").innerHTML = dictionary.save;
   changeItemsDirection(dictionary.lang);

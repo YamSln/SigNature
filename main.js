@@ -48,9 +48,13 @@ function createWindow() {
     width: 600,
     height: 800,
     resizable: false,
+    icon: "./assets/icons/app.ico",
   });
   win.loadFile("./src/index/index.html");
-  win.webContents.openDevTools();
+  // Open devtools on dev mode
+  if (process.env.ENV === "dev") {
+    win.webContents.openDevTools();
+  }
   win.on("close", () => {
     win = null;
   });
@@ -221,6 +225,7 @@ ipcMain.on("preview", (evt, payload) => {
       resizable: false,
       width: 600,
       height: 400,
+      icon: "./assets/icons/app.ico",
     });
     previewWindow.menuBarVisible = false;
     previewWindow.loadURL("data:text/html;charset=utf-8," + signature);
