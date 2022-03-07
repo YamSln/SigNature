@@ -9,17 +9,11 @@ label {
 .form-group {
   padding-bottom: 20px;
 }
-
+/* Align items from right to left - used for rtl language translation */
 html.is-rtl * {
   direction: rtl;
 }
-
-* {
-  font-family: "Assistant";
-  font-weight: 400;
-  font-style: normal;
-}
-
+/* Loading screen animation and background */
 .loading {
   background: url("./assets/gifs/loading.gif") no-repeat center center;
   background-color: rgba(255, 255, 255, 0.7);
@@ -30,7 +24,7 @@ html.is-rtl * {
   width: 100%;
   z-index: 9999999;
 }
-
+/* Add assistant font from local resources */
 @font-face {
   font-family: "Assistant";
   src: url(./assets/font/Assistant-Regular.ttf) format("opentype");
@@ -44,8 +38,20 @@ html.is-rtl * {
   font-weight: 700;
   font-style: bold;
 }
-
+/* Set assistant font */
+* {
+  font-family: "Assistant";
+  font-weight: 400;
+  font-style: normal;
+}
+/* Remove button focus borders */
 .btn:focus {
   outline: none;
   box-shadow: none;
+}
+/* Remove arrows from number fields */
+input::-webkit-outer-spin-button,
+input::-webkit-inner-spin-button {
+  -webkit-appearance: none;
+  margin: 0;
 }

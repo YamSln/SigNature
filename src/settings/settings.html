@@ -1,7 +1,7 @@
 <html lang="en">
   <head>
     <meta charset="UTF-8" />
-    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta http-equiv="Content-Security-Policy" content="script-src 'self'" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <link
       rel="stylesheet"
@@ -9,12 +9,11 @@
     />
     <link rel="stylesheet" href="../../style.css" />
   </head>
-  <body onload="init()">
+  <body>
     <button
       id="back"
       class="btn btn-light"
       style="border-radius: 35px; margin-bottom: 5px"
-      onclick="navigateBack()"
     >
       <img id="backIcon" />
     </button>
@@ -23,88 +22,51 @@
       <div class="form-group">
         <label id="officeLabel" for="office"></label>
         <input
-          type="text"
+          type="number"
           class="form-control"
           id="office"
           required
-          pattern=".{8,9}"
-          oninput="setCustomValidity('')"
-          onkeypress="return isNumber(event)"
+          min="10000000"
+          max="99999999"
         />
       </div>
       <div class="form-group">
         <label id="faxLabel" for="fax"></label>
         <input
-          type="text"
+          type="number"
           class="form-control"
           id="fax"
           required
-          pattern=".{8,9}"
-          oninput="setCustomValidity('')"
-          onkeypress="return isNumber(event)"
+          min="10000000"
+          max="99999999"
         />
       </div>
       <div class="form-group">
         <label id="addressLabel" for="address"></label>
-        <input
-          type="text"
-          class="form-control"
-          id="address"
-          oninput="setCustomValidity('')"
-        />
+        <input type="text" class="form-control" id="address" />
       </div>
       <div class="form-group">
         <label id="websiteLabel" for="website"></label>
-        <input
-          type="text"
-          class="form-control"
-          id="website"
-          oninput="setCustomValidity('')"
-        />
+        <input type="text" class="form-control" id="website" />
       </div>
       <div class="form-group">
         <label id="linkedinLabel" for="linkedin"></label>
-        <input
-          type="text"
-          class="form-control"
-          id="linkedin"
-          oninput="setCustomValidity('')"
-        />
+        <input type="text" class="form-control" id="linkedin" />
       </div>
       <div class="form-group">
         <label id="facebookLabel" for="facebook"></label>
-        <input
-          type="text"
-          class="form-control"
-          id="facebook"
-          oninput="setCustomValidity('')"
-        />
+        <input type="text" class="form-control" id="facebook" />
       </div>
       <div class="form-group">
         <label id="youtubeLabel" for="youtube"></label>
-        <input
-          type="text"
-          class="form-control"
-          id="youtube"
-          oninput="setCustomValidity('')"
-        />
+        <input type="text" class="form-control" id="youtube" />
       </div>
       <div class="form-group">
         <label id="instagramLabel" for="instagram"></label>
-        <input
-          type="text"
-          class="form-control"
-          id="instagram"
-          oninput="setCustomValidity('')"
-        />
+        <input type="text" class="form-control" id="instagram" />
       </div>
       <div>
-        <button
-          id="save"
-          type="button"
-          class="btn btn-success"
-          onclick="onSubmit()"
-        ></button>
+        <button id="save" type="button" class="btn btn-success"></button>
       </div>
     </form>
     <!-- Settings renderer process script and utilities script -->

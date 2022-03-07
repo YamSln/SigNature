@@ -4,16 +4,16 @@
   "description": "SigNature creation app",
   "main": "main.js",
   "scripts": {
-    "start": "electron .",
+    "start": "electron . set ENV=dev",
     "test": "electron-test",
     "pack": "electron-builder --dir",
     "dist": "electron-builder"
   },
-  
   "author": "Jam",
   "license": "ISC",
   "dependencies": {
-    "bootstrap": "^5.1.3"
+    "bootstrap": "^5.1.3",
+    "dotenv": "^16.0.0"
   },
   "devDependencies": {
     "electron": "^17.1.0",

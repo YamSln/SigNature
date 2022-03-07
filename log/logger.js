@@ -1,9 +1,12 @@
 const { Console } = require("console");
 const fs = require("fs");
+require("dotenv").config();
+const logFileLocation =
+  process.env.ENV == "dev" ? "./log/debug.log" : "debug.log";
 exports.Logger = class Logger {
   constructor() {
     this.logger = new Console(
-      fs.createWriteStream("./log/debug.log", { flags: "a" })
+      fs.createWriteStream(logFileLocation, { flags: "a" })
     );
   }
 

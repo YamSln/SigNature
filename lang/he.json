@@ -23,12 +23,13 @@
     "language": "שפה",
     "english": "אנגלית",
     "hebrew": "עברית",
-    "missingField": "שדה זה הינו חובה",
+    "missingField": "שדה זה הינו חובה / קלט לא תקין",
     "invalidEmail": "כתובת אימייל לא תקינה",
     "invalidNumber": "מספר טלפון לא תקין",
     "invalidURL": "כתובת לא תקינה",
     "saveFile": "שמירה בשם",
     "savedSuccessfully": "נשמר בהצלחה",
     "backIcon": "../../assets/icons/arrow-90deg-right.svg",
-    "uxError": "אירעה שגיאה במהלך ביצוע הפעולה האחרונה"
+    "uxError": "אירעה שגיאה במהלך ביצוע הפעולה האחרונה",
+    "error": "שגיאה"
 }

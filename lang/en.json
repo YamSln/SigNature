@@ -23,12 +23,13 @@
     "language": "Language",
     "english": "English",
     "hebrew": "Hebrew",
-    "missingField": "Please fill out this field",
+    "missingField": "Please fill out this field / Invalid input",
     "invalidEmail": "Invalid email address",
     "invalidNumber": "Invalid phone number",
     "invalidURL": "Invalid URL",
     "saveFile": "Save signature",
     "savedSuccessfully": "Saved Successfully",
     "backIcon": "../../assets/icons/arrow-90deg-left.svg",
-    "uxError": "An unexpected error occurred"
+    "uxError": "An unexpected error occurred",
+    "error": "Error"
 }

@@ -78,6 +78,10 @@ function validateInput(name, position, email, phone) {
     phone.setCustomValidity(dictionary.invalidNumber);
     phone.reportValidity();
     return false;
+  } else if (phone.validity.rangeUnderflow || phone.validity.rangeOverflow) {
+    phone.setCustomValidity(dictionary.invalidNumber);
+    phone.reportValidity();
+    return false;
   } else {
     phoneNumber = formatPhoneNumber(phone.value, true);
   } // Returns input values as payload
@@ -113,7 +117,7 @@ function openFileLocation() {
   shell.showItemInFolder(filePath);
 }
 
-// preview
+// ---- Preview ----
 
 function openPreview() {
   const name = document.getElementById("name");
@@ -127,3 +131,14 @@ function openPreview() {
     ipcRenderer.send("preview", payload);
   }
 }
+// Set buttons event listeners
+window.onload = () => {
+  document.getElementById("preview").onclick = openPreview;
+  document.getElementById("clear").onclick = clearForm;
+  document.getElementById("save").onclick = onSubmit;
+  document.getElementById("open-folder").onclick = openFileLocation;
+  document.getElementById("open").onclick = openFile;
+  document.querySelectorAll("input").forEach((input) => {
+    input.oninput = () => input.setCustomValidity("");
+  });
+};

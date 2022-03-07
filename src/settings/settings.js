@@ -86,7 +86,7 @@ function validateInput(
     office.setCustomValidity(dictionary.missingField);
     office.reportValidity();
     return false;
-  } else if (office.validity.patternMismatch) {
+  } else if (office.validity.rangeUnderflow || office.validity.rangeOverflow) {
     office.setCustomValidity(dictionary.invalidNumber);
     office.reportValidity();
     return false;
@@ -97,7 +97,7 @@ function validateInput(
     fax.setCustomValidity(dictionary.missingField);
     fax.reportValidity();
     return false;
-  } else if (fax.validity.patternMismatch) {
+  } else if (fax.validity.rangeUnderflow || fax.validity.rangeOverflow) {
     fax.setCustomValidity(dictionary.invalidNumber);
     fax.reportValidity();
     return false;
@@ -141,3 +141,12 @@ function triggerLoading(trigger, loadingElement) {
     loadingElement.classList.remove("loading");
   }
 }
+// Set buttons event listeners
+window.onload = () => {
+  init();
+  document.getElementById("back").onclick = navigateBack;
+  document.getElementById("save").onclick = onSubmit;
+  document.querySelectorAll("input").forEach((input) => {
+    input.oninput = () => input.setCustomValidity("");
+  });
+};

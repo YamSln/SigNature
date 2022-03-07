@@ -25,6 +25,7 @@ const {
   YOUTUBE,
   WEBSITE,
 } = require("./src/utils");
+require("dotenv").config();
 // DB and utils
 const db = new dbHandler();
 const isMac = isPlatformMac();
@@ -136,10 +137,19 @@ function isLanguage(lang) {
 }
 // Start initializations and rendering
 app.on("ready", () => {
-  initLanguage();
-  createWindow();
-  createMenu();
-  win.webContents.on("dom-ready", sendLanguageChange);
+  try {
+    initLanguage();
+    createWindow();
+    createMenu();
+    win.webContents.on("dom-ready", sendLanguageChange);
+  } catch (err) {
+    // Show error details only in dev mode
+    if (process.env.ENV === "dev") {
+      dialog.showErrorBox(dict.error, err);
+    } else {
+      dialog.showErrorBox(dict.error, dict.uxError);
+    }
+  }
 });
 
 // ---- MAC Support ----
@@ -216,7 +226,7 @@ ipcMain.on("preview", (evt, payload) => {
     previewWindow.loadURL("data:text/html;charset=utf-8," + signature);
   } catch (err) {
     logger.error(err);
-    dialog.showErrorBox("Error", "An unexpected error occurred");
+    dialog.showErrorBox("Error", dict.uxError);
   } finally {
     sendLoadingEvent(evt, false);
   }
