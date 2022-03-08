@@ -1,12 +1,5 @@
 // ---- Main Process ----
-const {
-  app,
-  BrowserWindow,
-  Menu,
-  ipcMain,
-  dialog,
-  shell,
-} = require("electron");
+const { app, BrowserWindow, Menu, ipcMain, dialog } = require("electron");
 const { dbHandler } = require("./src/model/dbHandler");
 const { ENGLISH, HEBREW } = require("./src/model/db.model");
 const fs = require("fs");
@@ -53,6 +46,7 @@ function createWindow() {
     icon: "./assets/icons/app.ico",
   });
   win.loadFile("./src/index/index.html");
+  win;
   // Open devtools on dev mode
   if (process.env.ENV === "dev") {
     win.webContents.openDevTools();
@@ -75,8 +69,9 @@ function setDictionary(lang) {
 }
 // Sets language, saves to db and renders application menu
 function setLanguage(lang) {
-  setDictionary(lang.includes(HEBREW) ? HEBREW : ENGLISH);
-  saveLanguage(lang.includes(HEBREW) ? HEBREW : ENGLISH);
+  const language = lang.includes(HEBREW) ? HEBREW : ENGLISH;
+  setDictionary(language);
+  saveLanguage(language);
   createMenu();
 }
 // Saves and updates language
@@ -92,6 +87,10 @@ function createMenu() {
         // Settings button
         label: dict.settings,
         click: navigateToSettings,
+      },
+      {
+        label: dict.help,
+        click: openHelpWindow,
       },
       {
         type: "separator",
@@ -158,6 +157,23 @@ app.on("ready", () => {
   }
 });
 
+function openHelpWindow() {
+  const helpWindow = new BrowserWindow({
+    parent: win,
+    modal: true,
+    resizable: false,
+    width: 600,
+    height: 400,
+    icon: "./assets/icons/app.ico",
+    webPreferences: {
+      nodeIntegration: true,
+      contextIsolation: false,
+    },
+  }); // Insert HTML template to new window
+  helpWindow.menuBarVisible = false;
+  helpWindow.loadFile("./src/help.html");
+}
+
 // ---- MAC Support ----
 
 function isPlatformMac() {
@@ -216,7 +232,7 @@ ipcMain.on("form-submit", (evt, payload) => {
       sendLoadingEvent(evt, false);
     });
 });
-
+// Signature preview window
 ipcMain.on("preview", (evt, payload) => {
   try {
     sendLoadingEvent(evt, true);
@@ -228,7 +244,7 @@ ipcMain.on("preview", (evt, payload) => {
       width: 600,
       height: 400,
       icon: "./assets/icons/app.ico",
-    });
+    }); // Insert HTML template to new window
     previewWindow.menuBarVisible = false;
     previewWindow.loadURL("data:text/html;charset=utf-8," + signature);
   } catch (err) {
@@ -238,31 +254,7 @@ ipcMain.on("preview", (evt, payload) => {
     sendLoadingEvent(evt, false);
   }
 });
-// Load signature from local db
-function generateSignature(payload) {
-  const settings = db.settings;
-  let signature;
-  try {
-    signature = db.signatureTemplate;
-  } catch {
-    throw new MissingResourceError("Signature is not loaded");
-  }
-  // Replace all flags with use input
-  return signature
-    .replace(NAME, payload.name)
-    .replace(EMAIL, payload.email)
-    .replace(POSITION, payload.position)
-    .replace(MOBILE, payload.phone)
-    .replace(OFFICE, settings.office)
-    .replace(FAX, settings.fax)
-    .replace(ADDRESS, settings.address)
-    .replace(WEBSITE, settings.website)
-    .replace(LINKEDIN, settings.linkedin)
-    .replace(FACEBOOK, settings.facebook)
-    .replace(YOUTUBE, settings.youtube)
-    .replace(INSTAGRAM, settings.instagram);
-}
-
+// Template browsing
 ipcMain.on("browse-template", (evt) => {
   dialog // Open dialog
     .showOpenDialog({
@@ -353,3 +345,27 @@ ipcMain.on("init-settings", (evt) => {
     sendLoadingEvent(evt, false);
   }, TIMEOUT);
 });
+// Load signature from local db
+function generateSignature(payload) {
+  const settings = db.settings;
+  let signature;
+  try {
+    signature = db.signatureTemplate;
+  } catch {
+    throw new MissingResourceError("Signature is not loaded");
+  }
+  // Replace all flags with use input
+  return signature
+    .replace(NAME, payload.name)
+    .replace(EMAIL, payload.email)
+    .replace(POSITION, payload.position)
+    .replace(MOBILE, payload.phone)
+    .replace(OFFICE, settings.office)
+    .replace(FAX, settings.fax)
+    .replace(ADDRESS, settings.address)
+    .replace(WEBSITE, settings.website)
+    .replace(LINKEDIN, settings.linkedin)
+    .replace(FACEBOOK, settings.facebook)
+    .replace(YOUTUBE, settings.youtube)
+    .replace(INSTAGRAM, settings.instagram);
+}

@@ -3,8 +3,8 @@ const ISRAEL_CALLING_CODE = "+972";
 const LOWER_CHAR_BOUND = 31;
 const UPPER_CHAR_BOUND = 48;
 const OTHER_CHARS = 57;
-const MAX_MOBILE = 9;
-const MAX_NONE_MOBILE = 8;
+const MAX_MOBILE = 10;
+const MAX_NONE_MOBILE = 9;
 const TAG_PREFIX = "!!";
 const NAME = TAG_PREFIX + "name";
 const POSITION = TAG_PREFIX + "pos";
@@ -63,7 +63,7 @@ function isURL(url) {
 }
 // Returns formatted phone number
 function formatPhoneNumber(number, mobile) {
-  if (number.length === mobile ? MAX_MOBILE : MAX_NONE_MOBILE) {
+  if (number.length === (mobile ? MAX_MOBILE : MAX_NONE_MOBILE)) {
     number = number.slice(1);
   }
   return (

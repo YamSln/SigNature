@@ -8,7 +8,23 @@
     "start": "electron .",
     "test": "electron-test",
     "pack": "electron-builder --dir",
-    "dist": "electron-builder"
+    "dist": "electron-builder",
+    "build-installer": "electron-builder"
+  },
+  "build": {
+    "appId": "sig-nature",
+    "win": {
+      "target": ["nsis"],
+      "icon": "./assets/icons/app.ico",
+      "requestedExecutionLevel": "requireAdministrator"
+    },
+    "nsis": {
+      "installerIcon": "./assets/icons/app.ico",
+      "uninstallerIcon": "./assets/icons/app.ico",
+      "uninstallDisplayName": "SigNature",
+      "oneClick": false,
+      "allowToChangeInstallationDirectory": true
+    }
   },
   "author": "Jam",
   "license": "ISC",

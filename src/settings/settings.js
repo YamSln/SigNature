@@ -34,7 +34,6 @@ ipcRenderer.on("set-settings", (evt, settings) => {
   });
 });
 ipcRenderer.on("signature-uploaded", (evt, name) => {
-  console.log(name);
   document.getElementById("template").value = name;
 });
 function init() {

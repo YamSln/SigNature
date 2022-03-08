@@ -129,7 +129,7 @@ exports.dbHandler = class dbHandler {
       signatureUrl,
       JSON.stringify({ name: "", template: "" }),
       (err) => {
-        this._handleDBUpdate(err);
+        this._handleSignatureUpdate(err);
       }
     );
   }
