@@ -120,11 +120,21 @@ function validateInput(
     office: officeNumber,
     fax: faxNumber,
     address: address.value,
-    website: website.value,
-    linkedin: linkedin.value,
-    facebook: facebook.value,
-    youtube: youtube.value,
-    instagram: instagram.value,
+    website: website.value.includes(URL_PREFIX)
+      ? website.value
+      : URL_PREFIX + website.value,
+    linkedin: linkedin.value.includes(URL_PREFIX)
+      ? linkedin.value
+      : URL_PREFIX + linkedin.value,
+    facebook: facebook.value.includes(URL_PREFIX)
+      ? facebook.value
+      : URL_PREFIX + facebook.value,
+    youtube: youtube.value.includes(URL_PREFIX)
+      ? youtube.value
+      : URL_PREFIX + youtube.value,
+    instagram: instagram.value.includes(URL_PREFIX)
+      ? instagram.value
+      : URL_PREFIX + instagram.value,
   };
 }
 

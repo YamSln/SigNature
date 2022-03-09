@@ -10,3 +10,8 @@
 2022-3-7 23:6:35 ERROR | Main Process: ReferenceError: signature is not defined
 2022-3-7 23:21:38 ERROR | : TypeError: Cannot read properties of undefined (reading 'replace')
 2022-3-7 23:21:42 ERROR | : TypeError: Cannot read properties of undefined (reading 'replace')
+2022-3-9 20:46:57 ERROR | : MissingResourceError: Signature is not loaded
+2022-3-9 20:47:0 ERROR | : MissingResourceError: Signature is not loaded
+2022-3-9 20:47:12 ERROR | : MissingResourceError: Signature is not loaded
+2022-3-9 20:47:30 ERROR | : MissingResourceError: Signature is not loaded
+2022-3-9 20:47:32 ERROR | : MissingResourceError: Signature is not loaded

@@ -6,12 +6,14 @@ const OTHER_CHARS = 57;
 const MAX_MOBILE = 10;
 const MAX_NONE_MOBILE = 9;
 const TAG_PREFIX = "!!";
+const URL_PREFIX = "https://";
 const NAME = TAG_PREFIX + "name";
 const POSITION = TAG_PREFIX + "pos";
 const EMAIL = TAG_PREFIX + "email";
 const MOBILE = TAG_PREFIX + "mobile";
 const OFFICE = TAG_PREFIX + "office";
 const FAX = TAG_PREFIX + "fax";
+const WEBSITE = TAG_PREFIX + "website";
 const ADDRESS = TAG_PREFIX + "address";
 const LINKEDIN = TAG_PREFIX + "linkedin";
 const FACEBOOK = TAG_PREFIX + "facebook";
@@ -19,12 +21,14 @@ const YOUTUBE = TAG_PREFIX + "youtube";
 const INSTAGRAM = TAG_PREFIX + "instagram";
 // Constants Export
 module.exports.ISRAEL_CALLING_CODE = ISRAEL_CALLING_CODE;
+module.exports.URL_PREFIX = URL_PREFIX;
 module.exports.NAME = NAME;
 module.exports.POSITION = POSITION;
 module.exports.EMAIL = EMAIL;
 module.exports.MOBILE = MOBILE;
 module.exports.OFFICE = OFFICE;
 module.exports.FAX = FAX;
+module.exports.WEBSITE = WEBSITE;
 module.exports.ADDRESS = ADDRESS;
 module.exports.LINKEDIN = LINKEDIN;
 module.exports.FACEBOOK = FACEBOOK;
@@ -60,6 +64,13 @@ function isURL(url) {
     "i"
   );
   return !!pattern.test(url);
+}
+// Formats URL with https
+function formatURL(url) {
+  if (!url.includes(URL_PREFIX)) {
+    return URL_PREFIX + url;
+  }
+  return url;
 }
 // Returns formatted phone number
 function formatPhoneNumber(number, mobile) {

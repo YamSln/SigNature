@@ -241,12 +241,21 @@ ipcMain.on("preview", (evt, payload) => {
       parent: win,
       modal: true,
       resizable: false,
-      width: 600,
+      width: 700,
       height: 400,
       icon: "./assets/icons/app.ico",
+      webPreferences: {
+        nodeIntegration: true,
+        contextIsolation: false,
+      },
     }); // Insert HTML template to new window
     previewWindow.menuBarVisible = false;
-    previewWindow.loadURL("data:text/html;charset=utf-8," + signature);
+    //previewWindow.openDevTools();
+    // Load preview window and send signature to it
+    previewWindow.loadFile("./src/preview/preview.html");
+    previewWindow.webContents.on("did-finish-load", () => {
+      previewWindow.webContents.send("set-preview", signature);
+    });
   } catch (err) {
     logger.error(err);
     dialog.showErrorBox(dict.error, dict.uxError);
@@ -356,16 +365,16 @@ function generateSignature(payload) {
   }
   // Replace all flags with use input
   return signature
-    .replace(NAME, payload.name)
-    .replace(EMAIL, payload.email)
-    .replace(POSITION, payload.position)
-    .replace(MOBILE, payload.phone)
-    .replace(OFFICE, settings.office)
-    .replace(FAX, settings.fax)
-    .replace(ADDRESS, settings.address)
-    .replace(WEBSITE, settings.website)
-    .replace(LINKEDIN, settings.linkedin)
-    .replace(FACEBOOK, settings.facebook)
-    .replace(YOUTUBE, settings.youtube)
-    .replace(INSTAGRAM, settings.instagram);
+    .replace(new RegExp(NAME, "g"), payload.name)
+    .replace(new RegExp(EMAIL, "g"), payload.email)
+    .replace(new RegExp(POSITION, "g"), payload.position)
+    .replace(new RegExp(MOBILE, "g"), payload.phone)
+    .replace(new RegExp(OFFICE, "g"), settings.office)
+    .replace(new RegExp(FAX, "g"), settings.fax)
+    .replace(new RegExp(ADDRESS, "g"), settings.address)
+    .replace(new RegExp(WEBSITE, "g"), settings.website)
+    .replace(new RegExp(LINKEDIN, "g"), settings.linkedin)
+    .replace(new RegExp(FACEBOOK, "g"), settings.facebook)
+    .replace(new RegExp(YOUTUBE, "g"), settings.youtube)
+    .replace(new RegExp(INSTAGRAM, "g"), settings.instagram);
 }
