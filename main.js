@@ -32,6 +32,16 @@ let win; // Main window
 let dict; // Dictionary
 // Disable chrome hardware acceleration
 app.disableHardwareAcceleration();
+// Catch unhandled errors
+process.setUncaughtExceptionCaptureCallback((err) => {
+  if (process.env.ENV === "dev") {
+    dialog.showErrorBox(dict.error, err);
+  } else {
+    dialog.showErrorBox(dict.error, dict.uxError);
+    logger.error(err);
+    process.exit(1);
+  }
+});
 // Main window
 function createWindow() {
   win = new BrowserWindow({
@@ -142,19 +152,10 @@ function isLanguage(lang) {
 }
 // Start initializations and rendering
 app.on("ready", () => {
-  try {
-    initLanguage();
-    createWindow();
-    createMenu();
-    win.webContents.on("dom-ready", sendLanguageChange);
-  } catch (err) {
-    // Show error details only in dev mode
-    if (process.env.ENV === "dev") {
-      dialog.showErrorBox(dict.error, err);
-    } else {
-      dialog.showErrorBox(dict.error, dict.uxError);
-    }
-  }
+  initLanguage();
+  createWindow();
+  createMenu();
+  win.webContents.on("dom-ready", sendLanguageChange);
 });
 
 function openHelpWindow() {
