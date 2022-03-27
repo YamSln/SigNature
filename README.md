@@ -6,7 +6,8 @@ SigNature is an email signature generation app using a premade html template.
 
 - Reusable information saving, phone numbers, urls...
 - Template upload and verification
-- Preview
+- Signature preview
+- Language change (supports english and hebrew ATM, including RTL)
 
 ## Usage
 
